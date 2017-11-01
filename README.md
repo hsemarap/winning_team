@@ -15,3 +15,11 @@ numpy
 scipy
 
 	sudo apt install python-scipy
+
+# The Data
+
+Source: https://cricsheet.org/
+
+YAML format: https://cricsheet.org/format/
+
+We have three different data sets: IPL, BBL, and T20 internationals.
