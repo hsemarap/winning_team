@@ -15,12 +15,13 @@ def test_matrix_save():
     sio.savemat('dummy-matrix.mat', {'a': a})
 
 def parse_yaml(yaml_file):
-    """
+    """Return YAML data from yaml_file.
     """
     with open(yaml_file, 'r') as stream:
         try:
             data = yaml.load(stream)
-            pprint.pprint(data)
+            # pprint.pprint(data)
+            return data
         except yaml.YAMLError as exc:
             print(exc)
 
@@ -34,4 +35,3 @@ if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
     # test_matrix_save()
     test_parse_yaml()
-    hello_world()
