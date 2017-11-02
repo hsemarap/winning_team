@@ -14,4 +14,7 @@ function accuracy = start(n, d, traincv_perc)
     ytest = y(ntraincv+1:n);
       
     %accuracy = testprimsvm(Xtraincv, ytraincv, Xtest, ytest);
-    accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10, 1/2);
+    %accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10, 1/2);
+    [C_opt gamma_opt accuracy_opt] = crossvalidation(5, Xtraincv, ytraincv);
+    accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt);
+    
