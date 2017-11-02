@@ -4,7 +4,7 @@
 %            y(i) is the label (+1 or -1) of the i-th sample
 %        positive scalar C
 % Output: vector alpha of n rows, 1 column
-function alpha = kerdualsvm(X,y,C)
+function alpha = kerdualsvm(X,y,C, K_gamma)
 Xsize = size(X);
 n = Xsize(1);
 d = Xsize(2);
@@ -14,7 +14,7 @@ v = ones(n, 1) * C;
 H = ones(n, n);
 for i=1:n
     for j=1:n
-        H(i, j) = y(i) * y(j) * K(X(i, :), X(j, :));
+        H(i, j) = y(i) * y(j) * K(X(i, :), X(j, :), K_gamma);
     end
 end
 alpha = quadprog(H,f,[],[],[],[],u,v);

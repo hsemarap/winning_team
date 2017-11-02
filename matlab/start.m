@@ -14,4 +14,4 @@ function accuracy = start(n, d, traincv_perc)
     ytest = y(ntraincv+1:n);
       
     %accuracy = testprimsvm(Xtraincv, ytraincv, Xtest, ytest);
-    accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10);
+    accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10, 1/2);

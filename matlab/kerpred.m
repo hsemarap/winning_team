@@ -5,13 +5,13 @@
 %            y(i) is the label (+1 or -1) of the i-th sample
 %        vector x of d rows, 1 column
 % Output: label (+1 or -1)
-function label = kerpred(alpha,X,y,x)
+function label = kerpred(alpha,X,y,x, K_gamma)
 Xsize = size(X);
 n = Xsize(1);
 d = Xsize(2);
 s = 0;
 for i=1:n,
-   s = s + alpha(i) * y(i) * K(X(i, :)', x);
+   s = s + alpha(i) * y(i) * K(X(i, :)', x, K_gamma);
 end
 %shorter version
 %s = sum(alpha .* y .* K(X', repelem(x, 1, n))');
