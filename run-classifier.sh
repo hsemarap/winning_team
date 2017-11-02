@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./features/extract-features.py
+./features/extract_features.py

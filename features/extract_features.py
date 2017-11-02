@@ -4,6 +4,7 @@ import numpy as np
 import scipy.io as sio
 import yaml
 import pprint
+from batsman-features import *
 
 def test_matrix_save():
     """Test how to save a matrix in the MATLAB format.
