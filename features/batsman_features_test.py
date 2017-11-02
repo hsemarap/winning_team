@@ -13,8 +13,11 @@ class TestBatsmenFeatures(unittest.TestCase):
     def test_runs_off_ball(self):
         self.assertEqual(120, 120)
 
-    def test_get_ball(self):
-        self.assertEqual(get_ball(self.yaml_data),
+    def test_get_first_ball(self):
+        self.assertEqual(get_ball(self.yaml_data,
+                                  '1st innings',
+                                  0,
+                                  0.1),
                          {
                              'batsman': 'SC Ganguly',
                              'bowler': 'P Kumar',
@@ -29,6 +32,11 @@ class TestBatsmenFeatures(unittest.TestCase):
                                  'total': 1
                              }
                         })
+
+    def test_runs_off_ball(self):
+        ball = get_ball(self.yaml_data, '1st innings', 8, 1.2)
+        self.assertEqual(runs_off_ball(ball['batsman'], ball), 4)
+        self.assertEqual(runs_off_ball(ball['non_striker'], ball), 0)
 
 if __name__ == '__main__':
     unittest.main()

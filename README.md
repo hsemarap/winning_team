@@ -28,6 +28,10 @@ We have three different data sets: IPL, BBL, and T20 internationals.
 
 Note: We won't use all the features. Some of them (like number of balls) are just to help compute the others.
 
+## TODO: Features
+
+Don't have separate dictionaries for each ball.
+
 ## Batsmen
 
 runs off this ball :: player, ball -> runs scored by the player off this ball
