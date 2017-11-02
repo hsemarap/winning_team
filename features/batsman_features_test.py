@@ -14,7 +14,21 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(120, 120)
 
     def test_get_ball(self):
-        self.assertEqual(get_ball(self.yaml_data), 120)
+        self.assertEqual(get_ball(self.yaml_data),
+                         {
+                             'batsman': 'SC Ganguly',
+                             'bowler': 'P Kumar',
+                             'extras': {
+                                 'legbyes': 1
+                             },
+                            'non_striker': 'BB '
+                             'McCullum',
+                             'runs': {
+                                 'batsman': 0,
+                                 'extras': 1,
+                                 'total': 1
+                             }
+                        })
 
 if __name__ == '__main__':
     unittest.main()
