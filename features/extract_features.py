@@ -4,7 +4,7 @@ import numpy as np
 import scipy.io as sio
 import yaml
 import pprint
-from batsman-features import *
+from batsman_features import *
 
 def test_matrix_save():
     """Test how to save a matrix in the MATLAB format.
@@ -34,3 +34,4 @@ if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
     # test_matrix_save()
     test_parse_yaml()
+    hello_world()
