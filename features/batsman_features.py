@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+import pprint
+
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
     for d in dict_list:
@@ -11,7 +13,7 @@ def flatten_list_of_dicts(dict_list):
 
 class Match:
     def __init__(self, yaml_data):
-        self.yaml_data = yaml_data
+        self.match_details = self.flatten_cricket_yaml_data(yaml_data)
 
     def flatten_cricket_yaml_data(self, yaml_data):
         yaml_data['innings'] = flatten_list_of_dicts(yaml_data['innings'])
@@ -19,11 +21,10 @@ class Match:
         yaml_data['innings']['2nd innings']['deliveries'] = flatten_list_of_dicts(yaml_data['innings']['2nd innings']['deliveries'])
         return yaml_data
 
-def get_ball(match_data, innings, ball_index, ball_number):
-    """Get ball (for test purposes).
-    """
-    # TODO: Replace 0.
-    return match_data['innings'][0][innings]['deliveries'][ball_index][ball_number]
+    def get_ball(self, innings, ball_number):
+        """Get ball.
+        """
+        return self.match_details['innings'][innings]['deliveries'][ball_number]
 
 def runs_off_ball(player, ball):
     if player == ball['batsman']:

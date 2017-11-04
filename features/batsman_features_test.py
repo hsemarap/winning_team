@@ -6,10 +6,12 @@ class TestBatsmenFeatures(unittest.TestCase):
     """
     Our basic test class
     """
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         yaml_file = "./raw-data/test-data/3-overs-335982.yaml"
-        self.yaml_data = parse_yaml(yaml_file)
-        self.ball_1_point_2 = {
+        cls.yaml_data = parse_yaml(yaml_file)
+        cls.match = Match(cls.yaml_data)
+        cls.ball_1_point_2 = {
             'batsman': 'BB '
             'McCullum',
             'bowler': 'Z Khan',
@@ -21,7 +23,7 @@ class TestBatsmenFeatures(unittest.TestCase):
                 'total': 4
             }
         }
-        self.ball_2_point_2 = {
+        cls.ball_2_point_2 = {
             'batsman': 'V Kohli',
             'bowler': 'AB Dinda',
             'non_striker': 'W '
@@ -38,12 +40,15 @@ class TestBatsmenFeatures(unittest.TestCase):
             }
         }
 
+    def setUp(self):
+        pass
+
     def test_flatten_list_of_dicts(self):
         self.assertEqual(flatten_list_of_dicts([{1: 2}, {2: 3}]),
                          {1: 2, 2: 3})
 
     def test_flatten_yaml_dict(self):
-        flat_innings = Match(None).flatten_cricket_yaml_data(self.yaml_data)['innings']
+        flat_innings = self.match.match_details['innings']
         self.assertEqual(flat_innings['1st innings']['deliveries'][1.2],
                          self.ball_1_point_2)
         self.assertEqual(flat_innings['2nd innings']['deliveries'][2.2],
@@ -53,10 +58,8 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(120, 120)
 
     def test_get_first_ball(self):
-        self.assertEqual(get_ball(self.yaml_data,
-                                  '1st innings',
-                                  0,
-                                  0.1),
+        self.assertEqual(self.match.get_ball('1st innings',
+                                             0.1),
                          {
                              'batsman': 'SC Ganguly',
                              'bowler': 'P Kumar',
@@ -73,7 +76,7 @@ class TestBatsmenFeatures(unittest.TestCase):
                         })
 
     def test_runs_off_ball(self):
-        ball = get_ball(self.yaml_data, '1st innings', 8, 1.2)
+        ball = self.match.get_ball('1st innings', 1.2)
         self.assertEqual(runs_off_ball(ball['batsman'], ball), 4)
         self.assertEqual(runs_off_ball(ball['non_striker'], ball), 0)
 
