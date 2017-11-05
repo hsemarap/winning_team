@@ -80,5 +80,17 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(runs_off_ball(ball['batsman'], ball), 4)
         self.assertEqual(runs_off_ball(ball['non_striker'], ball), 0)
 
+    def test_batsman_total(self):
+        self.assertEqual(batsman_total(self.match, 'R Dravid'), 2)
+        self.assertEqual(batsman_total(self.match, 'BB McCullum'), 23)
+
+    def test_batsman_num_balls(self):
+        self.assertEqual(batsman_num_balls(self.match, 'R Dravid'), 3)
+        self.assertEqual(batsman_num_balls(self.match, 'BB McCullum'), 14)
+
+    def test_batsman_average(self):
+        self.assertAlmostEqual(batsman_average(self.match, 'R Dravid'), 2/3)
+        self.assertAlmostEqual(batsman_average(self.match, 'BB McCullum'), 23/14)
+
 if __name__ == '__main__':
     unittest.main()
