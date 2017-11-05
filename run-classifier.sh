@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./features/extract_features.py
+./features/extract_features.py
 
 PYTHONPATH=`pwd`:`pwd`/features:$PYTHONPATH
 export PYTHONPATH

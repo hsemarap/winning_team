@@ -54,4 +54,9 @@ def batsman_num_balls(match, player):
     return total
 
 def batsman_average(match, player):
-    return batsman_total(match, player) / batsman_num_balls(match, player)
+    total = batsman_total(match, player)
+    balls = batsman_num_balls(match, player)
+    if balls == 0:
+        return 0.0
+    else:
+        return total / balls

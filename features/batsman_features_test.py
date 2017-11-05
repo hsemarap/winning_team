@@ -91,6 +91,7 @@ class TestBatsmenFeatures(unittest.TestCase):
     def test_batsman_average(self):
         self.assertAlmostEqual(batsman_average(self.match, 'R Dravid'), 2/3)
         self.assertAlmostEqual(batsman_average(self.match, 'BB McCullum'), 23/14)
+        self.assertAlmostEqual(batsman_average(self.match, 'Foo'), 0)
 
 if __name__ == '__main__':
     unittest.main()
