@@ -53,10 +53,10 @@ def batsman_num_balls(match, player):
             total += 1
     return total
 
-def batsman_average(match, player):
+def batsman_strike_rate(match, player):
     total = batsman_total(match, player)
     balls = batsman_num_balls(match, player)
     if balls == 0:
         return 0.0
     else:
-        return total / balls
+        return 100 * total / balls
