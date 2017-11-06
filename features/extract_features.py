@@ -66,11 +66,11 @@ def test_season_2_with_season_1_stats():
     season2_dir = './raw-data/ipl/season-2-2009'
     num_files = None
     season1_matches = get_matches(season1_dir, num_files)
-    num_files = 1
-    # num_files = None
+    # num_files = 1
+    num_files = None
     season2_matches = get_matches(season2_dir, num_files)
-    last = 1
-    # last = len(season2_matches)
+    # last = 1
+    last = len(season2_matches)
     matrix = []
     outcome_vector = []
     for match in season2_matches[:last]:
