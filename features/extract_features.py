@@ -33,13 +33,14 @@ def test_parse_yaml():
     f = "./raw-data/test-data/3-overs-335982.yaml"
     parse_yaml(f)
 
-def get_matches(dir_name):
-    """Get all matches in directory."""
+def get_matches(dir_name, num_files):
+    """Get all matches in directory.
+    If num_files is None, get all files."""
     matches = []
     files = []
-    num_files = 10
-    # num_files = 1
-    for f in itertools.islice(os.listdir(dir_name), num_files):
+    if num_files is None:
+        num_files = len(os.listdir(dir_name))
+    for f in os.listdir(dir_name)[:num_files]:
     # for f in [os.listdir(dir_name)[6]]:
     # for f in os.listdir(dir_name):
         # TODO: No idea why the test fails.
@@ -53,7 +54,7 @@ def get_matches(dir_name):
 
 def test_reading_files():
     season_dir = './raw-data/ipl/season-4-2011'
-    matches = get_matches(season_dir)
+    matches = get_matches(season_dir, None)
 
     for i, match in enumerate(matches):
         print(batsman_total(match, 'BB McCullum'))
@@ -61,15 +62,17 @@ def test_reading_files():
         print(batsman_strike_rate(match, 'BB McCullum'))
 
 def test_season_2_with_season_1_stats():
-    """
-    """
     season1_dir = './raw-data/ipl/season-1-2008'
     season2_dir = './raw-data/ipl/season-2-2009'
-    season1_matches = get_matches(season1_dir)
-    season2_matches = get_matches(season2_dir)
-    match1 = season2_matches[0]
-    fs = match1.features(season1_matches)
-    print(fs)
+    num_files = None
+    season1_matches = get_matches(season1_dir, num_files)
+    num_files = None
+    season2_matches = get_matches(season2_dir, num_files)
+    # last = 1
+    last = len(season2_matches)
+    for match in season2_matches[:last]:
+        fs = match.features(season1_matches)
+        print(fs)
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')

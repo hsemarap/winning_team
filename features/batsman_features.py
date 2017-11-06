@@ -102,16 +102,14 @@ class Match:
     def print_match_info(self):
         print("\nMatch info:", self.file_name)
         print(self.teams())
-        team1 = self.get_first_batting_side_players()
-        team2 = self.get_second_batting_side_players()
-        print(list(team1))
-        print(list(team2))
 
     def print_past_stats(self, past_matches):
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
-        print([batsman_total_over_matches(past_matches, player) for player in team1])
-        print([batsman_total_over_matches(past_matches, player) for player in team2])
+        for player in team1:
+            print(player, batsman_total_over_matches(past_matches, player))
+        for player in team2:
+            print(player, batsman_total_over_matches(past_matches, player))
 
     def features(self, past_matches):
         """Return features usable as a training data point.
