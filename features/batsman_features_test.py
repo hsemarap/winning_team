@@ -91,7 +91,7 @@ class TestBatsmenFeatures(unittest.TestCase):
     def test_batsman_strike_rate(self):
         self.assertAlmostEqual(batsman_strike_rate(self.match, 'R Dravid'), 100 * 2/3)
         self.assertAlmostEqual(batsman_strike_rate(self.match, 'BB McCullum'), 100 * 23/14)
-        self.assertAlmostEqual(batsman_strike_rate(self.match, 'Foo'), 0)
+        self.assertAlmostEqual(batsman_strike_rate(self.match, 'Foo'), default_strike_rate)
 
     def test_overall_strike_rate(self):
         self.assertAlmostEqual(batsman_overall_strike_rate(
@@ -99,7 +99,7 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertAlmostEqual(batsman_overall_strike_rate(
             [self.match], 'BB McCullum'), 100 * 23/14)
         self.assertAlmostEqual(batsman_overall_strike_rate(
-            [self.match], 'Foo'), 0)
+            [self.match], 'Foo'), default_strike_rate)
 
     def test_unique_everseen(self):
         self.assertEqual(list(unique_everseen("aabbcedeeeb")),
@@ -123,11 +123,13 @@ class TestBatsmenFeatures(unittest.TestCase):
 
     def test_match_features(self):
         output = self.match.features([self.match])
-        expected = [0.0, 164.28571428571428, 0.0, 0.0,
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        x = default_strike_rate
+        expected = [0.0, 164.28571428571428, x, x,
+                    x, x, x, x, x, x, x,
                     66.66666666666667, 10.0, 20.0, 100.0,
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                    x, x, x, x, x, x, x,
                     1]
+        print(output, expected)
         for o, e in zip(output, expected):
             self.assertAlmostEqual(o, e)
 

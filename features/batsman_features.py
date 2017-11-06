@@ -3,6 +3,8 @@
 import pprint
 from itertools import chain, filterfalse, islice, repeat, tee
 
+default_strike_rate = 100
+
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
     for d in dict_list:
@@ -123,12 +125,10 @@ class Match:
         self.print_past_stats(past_matches)
 
         result = []
-        # TODO: Change this.
-        default_feature_value = 0.0
         team1_features = [batsman_overall_strike_rate(past_matches, player) for player in team1]
-        team1_features = list(islice(chain(team1_features, repeat(default_feature_value)), 11))
+        team1_features = list(islice(chain(team1_features, repeat(default_strike_rate)), 11))
         team2_features = [batsman_overall_strike_rate(past_matches, player) for player in team2]
-        team2_features = list(islice(chain(team2_features, repeat(default_feature_value)), 11))
+        team2_features = list(islice(chain(team2_features, repeat(default_strike_rate)), 11))
 
         if self.first_batting_side_won():
             outcome = 1
@@ -163,7 +163,7 @@ def batsman_strike_rate(match, player):
     total = batsman_total(match, player)
     balls = batsman_num_balls(match, player)
     if balls == 0:
-        return 0.0
+        return default_strike_rate
     else:
         return 100 * total / balls
 
@@ -176,6 +176,6 @@ def batsman_num_balls_over_matches(matches, player):
 def batsman_overall_strike_rate(matches, player):
     balls = batsman_num_balls_over_matches(matches, player)
     if balls == 0:
-        return 0.0
+        return default_strike_rate
     else:
         return 100 * batsman_total_over_matches(matches, player) / balls
