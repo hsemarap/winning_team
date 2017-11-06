@@ -121,5 +121,15 @@ class TestBatsmenFeatures(unittest.TestCase):
     def test_first_batting_side_won(self):
         self.assertEqual(self.match.first_batting_side_won(), True)
 
+    def test_match_features(self):
+        output = self.match.features([self.match])
+        expected = [0.0, 164.28571428571428, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                    66.66666666666667, 10.0, 20.0, 100.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                    1]
+        for o, e in zip(output, expected):
+            self.assertAlmostEqual(o, e)
+
 if __name__ == '__main__':
     unittest.main()

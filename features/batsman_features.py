@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import pprint
-from itertools import chain, filterfalse
+from itertools import chain, filterfalse, islice, repeat
 
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
@@ -92,6 +92,30 @@ class Match:
 
     def first_batting_side_won(self):
         return self.winner() == self.first_batting_side()
+
+    def features(self, past_matches):
+        """Return features usable as a training data point.
+
+        For now, return 11 players on the first-batting side, 11 players on
+        the bowling side, and match outcome.
+        """
+        team1 = self.get_first_batting_side_players()
+        team2 = self.get_second_batting_side_players()
+        result = []
+        # TODO: Change this.
+        default_feature_value = 0.0
+        team1_features = [batsman_overall_strike_rate(past_matches, player) for player in team1]
+        team1_features = list(islice(chain(team1_features, repeat(default_feature_value)), 11))
+        team2_features = [batsman_overall_strike_rate(past_matches, player) for player in team2]
+        team2_features = list(islice(chain(team2_features, repeat(default_feature_value)), 11))
+
+        if self.first_batting_side_won():
+            outcome = 1
+        else:
+            outcome = 0
+        result = team1_features + team2_features + [outcome]
+        assert len(result) == 23
+        return result
 
 def runs_off_ball(player, ball):
     if player == ball['batsman']:
