@@ -10,7 +10,7 @@ class TestBatsmenFeatures(unittest.TestCase):
     def setUpClass(cls):
         yaml_file = "./raw-data/test-data/3-overs-335982.yaml"
         cls.yaml_data = parse_yaml(yaml_file)
-        cls.match = Match(cls.yaml_data)
+        cls.match = Match(cls.yaml_data, yaml_file)
         cls.ball_1_point_2 = {
             'batsman': 'BB '
             'McCullum',

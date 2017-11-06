@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 
 import pprint
-from itertools import chain, filterfalse, islice, repeat
+from itertools import chain, filterfalse, islice, repeat, tee
 
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
     for d in dict_list:
         assert len(d.keys()) == 1
         for k,v in d.items():
-            assert k not in flat_dict
+            # TODO: Can't assert this because 336024.yaml has 18.1 and 18.10,
+            # which are represented as the same float.
+            # assert k not in flat_dict
             flat_dict[k] = v
     return flat_dict
 
@@ -32,8 +34,9 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 class Match:
-    def __init__(self, yaml_data):
+    def __init__(self, yaml_data, file_name):
         self.match_details = self.flatten_cricket_yaml_data(yaml_data)
+        self.file_name = file_name
 
     def flatten_cricket_yaml_data(self, yaml_data):
         yaml_data['innings'] = flatten_list_of_dicts(yaml_data['innings'])
@@ -79,6 +82,9 @@ class Match:
         except:
             return None
 
+    def teams(self):
+        return self.match_details['info']['teams']
+
     def first_batting_side(self):
         toss = self.match_details['info']['toss']
         teams = self.match_details['info']['teams']
@@ -93,6 +99,15 @@ class Match:
     def first_batting_side_won(self):
         return self.winner() == self.first_batting_side()
 
+    def print_match_info(self):
+        print("\nMatch info:", self.file_name)
+        print(self.teams())
+        team1 = self.get_first_batting_side_players()
+        team2 = self.get_second_batting_side_players()
+        print(list(team1))
+        print(list(team2))
+        print("\n")
+
     def features(self, past_matches):
         """Return features usable as a training data point.
 
@@ -101,6 +116,11 @@ class Match:
         """
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
+        self.print_match_info()
+
+        for match in past_matches:
+            match.print_match_info()
+
         result = []
         # TODO: Change this.
         default_feature_value = 0.0
