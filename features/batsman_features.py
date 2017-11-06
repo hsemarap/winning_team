@@ -106,7 +106,12 @@ class Match:
         team2 = self.get_second_batting_side_players()
         print(list(team1))
         print(list(team2))
-        print("\n")
+
+    def print_past_stats(self, past_matches):
+        team1 = self.get_first_batting_side_players()
+        team2 = self.get_second_batting_side_players()
+        print([batsman_total_over_matches(past_matches, player) for player in team1])
+        print([batsman_total_over_matches(past_matches, player) for player in team2])
 
     def features(self, past_matches):
         """Return features usable as a training data point.
@@ -117,9 +122,7 @@ class Match:
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
         self.print_match_info()
-
-        for match in past_matches:
-            match.print_match_info()
+        self.print_past_stats(past_matches)
 
         result = []
         # TODO: Change this.
@@ -166,10 +169,15 @@ def batsman_strike_rate(match, player):
     else:
         return 100 * total / balls
 
+def batsman_total_over_matches(matches, player):
+    return sum([batsman_total(match, player) for match in matches])
+
+def batsman_num_balls_over_matches(matches, player):
+    return sum([batsman_num_balls(match, player) for match in matches])
+
 def batsman_overall_strike_rate(matches, player):
-    total = sum([batsman_total(match, player) for match in matches])
-    balls = sum([batsman_num_balls(match, player) for match in matches])
+    balls = batsman_num_balls_over_matches(matches, player)
     if balls == 0:
         return 0.0
     else:
-        return 100 * total / balls
+        return 100 * batsman_total_over_matches(matches, player) / balls
