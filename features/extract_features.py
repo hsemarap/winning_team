@@ -66,13 +66,23 @@ def test_season_2_with_season_1_stats():
     season2_dir = './raw-data/ipl/season-2-2009'
     num_files = None
     season1_matches = get_matches(season1_dir, num_files)
+    # num_files = 1
     num_files = None
     season2_matches = get_matches(season2_dir, num_files)
     # last = 1
     last = len(season2_matches)
+    matrix = []
+    outcome_vector = []
     for match in season2_matches[:last]:
         fs = match.features(season1_matches)
-        print(fs)
+        outcome = fs[-1]
+        fs = fs[:-1]
+        matrix.append(fs)
+        outcome_vector.append(outcome)
+    print(matrix)
+    print(outcome_vector)
+    sio.savemat('extracted-stats/season2-wrt-season1.mat',
+                {'X': matrix, 'y': outcome_vector})
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
