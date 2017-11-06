@@ -93,5 +93,17 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertAlmostEqual(batsman_strike_rate(self.match, 'BB McCullum'), 100 * 23/14)
         self.assertAlmostEqual(batsman_strike_rate(self.match, 'Foo'), 0)
 
+    def test_overall_strike_rate(self):
+        self.assertAlmostEqual(batsman_overall_strike_rate(
+                [self.match], 'R Dravid'), 100 * 2/3)
+        self.assertAlmostEqual(batsman_overall_strike_rate(
+                [self.match], 'BB McCullum'), 100 * 23/14)
+        self.assertAlmostEqual(batsman_overall_strike_rate(
+                [self.match], 'Foo'), 0)
+
+    def test_unique_everseen(self):
+        self.assertEqual(list(unique_everseen("aabbcedeeeb")),
+                         ['a', 'b', 'c', 'e', 'd'])
+
 if __name__ == '__main__':
     unittest.main()

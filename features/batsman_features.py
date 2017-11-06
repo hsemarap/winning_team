@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import pprint
-from itertools import chain
+from itertools import chain, filterfalse
 
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
@@ -11,6 +11,25 @@ def flatten_list_of_dicts(dict_list):
             assert k not in flat_dict
             flat_dict[k] = v
     return flat_dict
+
+def unique_everseen(iterable, key=None):
+    """List unique elements, preserving order. Remember all elements ever seen.
+
+    From https://docs.python.org/2/library/itertools.html"""
+    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
+    # unique_everseen('ABBCcAD', str.lower) --> A B C D
+    seen = set()
+    seen_add = seen.add
+    if key is None:
+        for element in filterfalse(seen.__contains__, iterable):
+            seen_add(element)
+            yield element
+    else:
+        for element in iterable:
+            k = key(element)
+            if k not in seen:
+                seen_add(k)
+                yield element
 
 class Match:
     def __init__(self, yaml_data):
@@ -56,6 +75,14 @@ def batsman_num_balls(match, player):
 def batsman_strike_rate(match, player):
     total = batsman_total(match, player)
     balls = batsman_num_balls(match, player)
+    if balls == 0:
+        return 0.0
+    else:
+        return 100 * total / balls
+
+def batsman_overall_strike_rate(matches, player):
+    total = sum([batsman_total(match, player) for match in matches])
+    balls = sum([batsman_num_balls(match, player) for match in matches])
     if balls == 0:
         return 0.0
     else:
