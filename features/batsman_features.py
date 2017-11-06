@@ -46,10 +46,32 @@ class Match:
         """
         return self.match_details['innings'][innings]['deliveries'][ball_number]
 
+    def first_innings_balls(self):
+        d = self.match_details['innings']['1st innings']['deliveries']
+        return d.items()
+
+    def second_innings_balls(self):
+        d = self.match_details['innings']['2nd innings']['deliveries']
+        return d.items()
+
     def balls(self):
-        d1 = self.match_details['innings']['1st innings']['deliveries']
-        d2 = self.match_details['innings']['2nd innings']['deliveries']
-        return chain(d1.items(), d2.items())
+        return chain(self.first_innings_balls(), self.second_innings_balls())
+
+    def get_players(self, batting_balls, bowling_balls):
+        batsmen = [ball['batsman'] for ix, ball in batting_balls]
+        non_strikers = [ball['non_striker'] for ix, ball in batting_balls]
+        bowlers = [ball['bowler'] for ix, ball in bowling_balls]
+        players = unique_everseen(
+            chain(unique_everseen(batsmen),
+                  unique_everseen(non_strikers),
+                  unique_everseen(bowlers)))
+        return players
+
+    def get_first_batting_side_players(self):
+        return self.get_players(self.first_innings_balls(), self.second_innings_balls())
+
+    def get_second_batting_side_players(self):
+        return self.get_players(self.second_innings_balls(), self.first_innings_balls())
 
 def runs_off_ball(player, ball):
     if player == ball['batsman']:
