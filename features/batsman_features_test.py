@@ -111,5 +111,15 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(list(self.match.get_second_batting_side_players()),
                          ['R Dravid', 'W Jaffer', 'V Kohli', 'JH Kallis', 'P Kumar', 'Z Khan'])
 
+    def test_winner(self):
+        self.assertEqual(self.match.winner(), 'Kolkata Knight Riders')
+
+    def test_first_batting_side(self):
+        self.assertEqual(self.match.first_batting_side(),
+                         'Kolkata Knight Riders')
+
+    def test_first_batting_side_won(self):
+        self.assertEqual(self.match.first_batting_side_won(), True)
+
 if __name__ == '__main__':
     unittest.main()

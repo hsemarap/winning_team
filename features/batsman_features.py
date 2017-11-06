@@ -73,6 +73,26 @@ class Match:
     def get_second_batting_side_players(self):
         return self.get_players(self.second_innings_balls(), self.first_innings_balls())
 
+    def winner(self):
+        try:
+            return self.match_details['info']['outcome']['winner']
+        except:
+            return None
+
+    def first_batting_side(self):
+        toss = self.match_details['info']['toss']
+        teams = self.match_details['info']['teams']
+        if toss['decision'] == 'bat':
+            return toss['winner']
+        else:
+            # Hack because Python can't remove non-destructively.
+            rest = teams[:]
+            rest.remove(toss['winner'])
+            return rest[0]
+
+    def first_batting_side_won(self):
+        return self.winner() == self.first_batting_side()
+
 def runs_off_ball(player, ball):
     if player == ball['batsman']:
         return ball['runs']['batsman']
