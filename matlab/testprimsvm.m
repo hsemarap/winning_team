@@ -1,5 +1,11 @@
 function accuracy = testprimsvm(Xtraincv, ytraincv, X, y)
-    theta = linprimalsvm(Xtraincv,ytraincv);  
+    [theta status] = linprimalsvm(Xtraincv,ytraincv);
+    if status == -2
+        disp('Error: Linear Primal SVM: Infeasible Problem')
+        accuracy = 0;
+        return
+    end
+    
     accuracy = 0;
     [total ~] = size(X);
     for i=1:total

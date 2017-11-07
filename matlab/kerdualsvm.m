@@ -4,7 +4,7 @@
 %            y(i) is the label (+1 or -1) of the i-th sample
 %        positive scalar C
 % Output: vector alpha of n rows, 1 column
-function alpha = kerdualsvm(X,y,C, K_gamma)
+function [alpha status] = kerdualsvm(X,y,C, K_gamma)
 Xsize = size(X);
 n = Xsize(1);
 d = Xsize(2);
@@ -17,4 +17,5 @@ for i=1:n
         H(i, j) = y(i) * y(j) * K(X(i, :), X(j, :), K_gamma);
     end
 end
-alpha = quadprog(H,f,[],[],[],[],u,v);
+options = optimset('Display','off');
+[alpha Fval status] = quadprog(H,f,[],[],[],[],u,v,[],options);

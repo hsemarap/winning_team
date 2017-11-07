@@ -28,10 +28,7 @@ function accuracy = start(traincv_perc, F, n, d)
         X = Xfinal;
         y = yfinal;
         
-        y = double(y)';
-        size(X)
-        size(y)        
-        
+        y = double(y)';              
     else
         [X y] = createsepdata(n, d);
     end
@@ -44,14 +41,22 @@ function accuracy = start(traincv_perc, F, n, d)
     Xtest = X(ntraincv+1:n, :);
     ytest = y(ntraincv+1:n);
     
+    disp('Running Greedy Subset Selection')
     [S ~] = greedysubset(F, X, y);
+    disp('Selecting features')
+    S
     
     Xtraincv = Xtraincv(:, S);
     Xtest = Xtest(:, S);
     
-    %accuracy = testprimsvm(Xtraincv, ytraincv, Xtest, ytest);
+    disp('Running Primal SVM')
+    accuracy = testprimsvm(Xtraincv, ytraincv, Xtest, ytest);
+    fprintf('Primal SVM Accuracy: %f\n', accuracy);
     %accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10, 1/2);
+    
+    disp('Running Dual SVM with K=5 fold crossvalidation')
     [C_opt gamma_opt accuracy_opt] = crossvalidation(5, Xtraincv, ytraincv);
     accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt);
+    fprintf('Dual SVM Accuracy: %f\n', accuracy);
     
  
