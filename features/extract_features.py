@@ -40,6 +40,7 @@ def get_matches(dir_name, num_files):
     if num_files is None:
         num_files = len(os.listdir(dir_name))
     for f in os.listdir(dir_name)[:num_files]:
+        print(f)
         try:
             x = Match(parse_yaml(os.path.join(dir_name, f)), f)
             matches.append(x)
@@ -103,24 +104,30 @@ def generate_stats():
     season10_dir = './raw-data/ipl/season-10-2017'
 
     num_files = None
-    # num_files = 10
+    # num_files = 1
     season1_matches = get_matches(season1_dir, num_files)
 
-    later_seasons = [season2_dir, season3_dir, season4_dir]
+    # later_seasons = [season2_dir, season3_dir, season4_dir]
+    later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
+
     # num_files = 1
     num_files = None
     per_season_matches = [get_matches(f, num_files) for f in later_seasons]
 
     later_matches = concat(per_season_matches)
+
     # last = 1
     last = len(later_matches)
 
-    # mxs = rolling_stats(later_matches[:last], lambda x, xs: x.features(xs), season1_matches)
     mmxs = rolling_stats(per_season_matches,
                          lambda s, past_ss: (rolling_stats(s[:last], lambda x, xs: x.features(xs), concat(past_ss))),
                          [season1_matches])
-    for i, matrix in enumerate(mmxs):
-        write_feature_matrix(matrix, 'extracted-stats/season%d-alone-rolling-stats.mat' % (i + 2))
+                         # [season1_matches, season2_matches, season3_matches, season4_matches])
+
+    start_index = 2
+    for matrix in mmxs:
+        write_feature_matrix(matrix, 'extracted-stats/season%d-alone-rolling-stats.mat' % start_index)
+        start_index += 1
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
