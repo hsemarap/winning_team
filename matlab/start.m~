@@ -17,21 +17,10 @@ function accuracy = start(traincv_perc, F, n, d)
         Xfinal = [Xfinal; X]; yfinal = [yfinal y];
         load("../extracted-stats/season6-alone-rolling-stats.mat");
         Xfinal = [Xfinal; X]; yfinal = [yfinal y];
-        load("../extracted-stats/season7-alone-rolling-stats.mat");
-        Xfinal = [Xfinal; X]; yfinal = [yfinal y];
-        load("../extracted-stats/season8-alone-rolling-stats.mat");
-        Xfinal = [Xfinal; X]; yfinal = [yfinal y];
-        load("../extracted-stats/season9-alone-rolling-stats.mat");
-        Xfinal = [Xfinal; X]; yfinal = [yfinal y];
-        load("../extracted-stats/season10-alone-rolling-stats.mat");
-        Xfinal = [Xfinal; X]; yfinal = [yfinal y];
         X = Xfinal;
         y = yfinal;
-        
-        y = double(y)';
         size(X)
-        size(y)        
-        
+        y = double(y)';
     else
         [X y] = createsepdata(n, d);
     end
