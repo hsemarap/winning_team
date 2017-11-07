@@ -37,19 +37,15 @@ def get_matches(dir_name, num_files):
     """Get all matches in directory.
     If num_files is None, get all files."""
     matches = []
-    files = []
     if num_files is None:
         num_files = len(os.listdir(dir_name))
     for f in os.listdir(dir_name)[:num_files]:
-    # for f in [os.listdir(dir_name)[6]]:
-    # for f in os.listdir(dir_name):
-        # TODO: No idea why the test fails.
-        # if os.path.isfile(os.path.abspath(f)):
-        #     print (f)
         print(f)
-        files.append(f)
-        x = Match(parse_yaml(os.path.join(dir_name, f)), f)
-        matches.append(x)
+        try:
+            x = Match(parse_yaml(os.path.join(dir_name, f)), f)
+            matches.append(x)
+        except:
+            print('Error processing file', f)
     return matches
 
 def test_reading_files():
@@ -61,26 +57,28 @@ def test_reading_files():
         print(batsman_num_balls(match, 'BB McCullum'))
         print(batsman_strike_rate(match, 'BB McCullum'))
 
-def test_season_2_with_season_1_stats():
-    season1_dir = './raw-data/ipl/season-1-2008'
-    season2_dir = './raw-data/ipl/season-2-2009'
-    num_files = None
-    season1_matches = get_matches(season1_dir, num_files)
-    # num_files = 1
-    num_files = None
-    season2_matches = get_matches(season2_dir, num_files)
-    # last = 1
-    last = len(season2_matches)
+def rolling_stats(xs, fn, initial_past = []):
+    """Get value of fn for each element with previous elements as additional input.
+    """
+    past = initial_past
+    result = []
+    for x in xs:
+        result.append(fn(x, past))
+        past.append(x)
+    return result
+
+def write_feature_matrix(mxs, path):
+    """Write feature matrix mxs as MATLAB training set and label set.
+    """
     matrix = []
     outcome_vector = []
-    for match in season2_matches[:last]:
-        fs = match.features(season1_matches)
+    for fs in mxs:
         outcome = fs[-1]
         fs = fs[:-1]
         matrix.append(fs)
         outcome_vector.append(outcome)
-    readable_output_file = 'extracted-stats/season2-wrt-season1.readable.txt'
-    mat_file = 'extracted-stats/season2-wrt-season1.mat'
+    readable_output_file = path + '.readable'
+    mat_file = path
     # print(matrix)
     # print(outcome_vector)
     with open(readable_output_file, 'w+') as rf:
@@ -90,10 +88,51 @@ def test_season_2_with_season_1_stats():
     sio.savemat(mat_file,
                 {'X': matrix, 'y': outcome_vector})
 
+def concat(xs):
+    return list(itertools.chain(*xs))
+
+def generate_stats():
+    season1_dir = './raw-data/ipl/season-1-2008'
+    season2_dir = './raw-data/ipl/season-2-2009'
+    season3_dir = './raw-data/ipl/season-3-2010'
+    season4_dir = './raw-data/ipl/season-4-2011'
+    season5_dir = './raw-data/ipl/season-5-2012'
+    season6_dir = './raw-data/ipl/season-6-2013'
+    season7_dir = './raw-data/ipl/season-7-2014'
+    season8_dir = './raw-data/ipl/season-8-2015'
+    season9_dir = './raw-data/ipl/season-9-2016'
+    season10_dir = './raw-data/ipl/season-10-2017'
+
+    num_files = None
+    # num_files = 1
+    season1_matches = get_matches(season1_dir, num_files)
+
+    # later_seasons = [season2_dir, season3_dir, season4_dir]
+    later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
+
+    # num_files = 1
+    num_files = None
+    per_season_matches = [get_matches(f, num_files) for f in later_seasons]
+
+    later_matches = concat(per_season_matches)
+
+    # last = 1
+    last = len(later_matches)
+
+    mmxs = rolling_stats(per_season_matches,
+                         lambda s, past_ss: (rolling_stats(s[:last], lambda x, xs: x.features(xs), concat(past_ss))),
+                         [season1_matches])
+                         # [season1_matches, season2_matches, season3_matches, season4_matches])
+
+    start_index = 2
+    for matrix in mmxs:
+        write_feature_matrix(matrix, 'extracted-stats/season%d-alone-rolling-stats.mat' % start_index)
+        start_index += 1
+
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
     # test_matrix_save()
     # test_parse_yaml()
 
     # test_reading_files()
-    test_season_2_with_season_1_stats()
+    generate_stats()
