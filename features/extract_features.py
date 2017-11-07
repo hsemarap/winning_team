@@ -61,6 +61,16 @@ def test_reading_files():
         print(batsman_num_balls(match, 'BB McCullum'))
         print(batsman_strike_rate(match, 'BB McCullum'))
 
+def rolling_stats(xs, fn, initial_past = []):
+    """Get value of fn for each element with previous elements as additional input.
+    """
+    past = initial_past
+    result = []
+    for x in xs:
+        result.append(fn(x, past))
+        past.append(x)
+    return result
+
 def test_season_2_with_season_1_stats():
     season1_dir = './raw-data/ipl/season-1-2008'
     season2_dir = './raw-data/ipl/season-2-2009'
