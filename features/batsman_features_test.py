@@ -98,11 +98,11 @@ class TestBatsmenFeatures(unittest.TestCase):
 
     def test_overall_strike_rate(self):
         self.assertAlmostEqual(batsman_overall_strike_rate(
-            [self.match], 'R Dravid'), 100 * 2/3)
+            get_player_stats_dict([self.match]), 'R Dravid'), 100 * 2/3)
         self.assertAlmostEqual(batsman_overall_strike_rate(
-            [self.match], 'BB McCullum'), 100 * 23/14)
+            get_player_stats_dict([self.match]), 'BB McCullum'), 100 * 23/14)
         self.assertAlmostEqual(batsman_overall_strike_rate(
-            [self.match], 'Foo'), default_strike_rate)
+            get_player_stats_dict([self.match]), 'Foo'), default_strike_rate)
 
     def test_unique_everseen(self):
         self.assertEqual(list(unique_everseen("aabbcedeeeb")),
