@@ -113,6 +113,14 @@ class Match:
         for player in team2:
             print(player, batsman_total_over_matches(past_matches, player))
 
+    def team_strike_rates(self, past_matches, team):
+        """Strike rates for all players in team over past_matches.
+        """
+        strike_rates = [batsman_overall_strike_rate(past_matches, player) for player in team]
+        strike_rates = list(islice(chain(strike_rates, repeat(default_strike_rate)), 11))
+        return strike_rates
+
+
     def features(self, past_matches):
         """Return features usable as a training data point.
 
@@ -125,10 +133,8 @@ class Match:
         self.print_past_stats(past_matches)
 
         result = []
-        team1_features = [batsman_overall_strike_rate(past_matches, player) for player in team1]
-        team1_features = list(islice(chain(team1_features, repeat(default_strike_rate)), 11))
-        team2_features = [batsman_overall_strike_rate(past_matches, player) for player in team2]
-        team2_features = list(islice(chain(team2_features, repeat(default_strike_rate)), 11))
+        team1_features = self.team_strike_rates(past_matches, team1)
+        team2_features = self.team_strike_rates(past_matches, team2)
 
         if self.first_batting_side_won():
             outcome = 1
