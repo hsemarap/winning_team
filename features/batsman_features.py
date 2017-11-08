@@ -2,6 +2,7 @@
 
 import pprint
 from itertools import chain, filterfalse, islice, repeat, tee
+from collections import defaultdict
 
 default_strike_rate = 100
 
@@ -15,6 +16,23 @@ def flatten_list_of_dicts(dict_list):
             # assert k not in flat_dict
             flat_dict[k] = v
     return flat_dict
+
+def get_player_stats_dict(matches):
+    """Return a dict of all player stats over matches."""
+    stats_dict = defaultdict(lambda: {'total runs': 0, 'total balls': 0})
+    for match in matches:
+        for ix, ball in match.balls():
+            batsman = ball['batsman']
+            stats_dict[batsman]['total runs'] += ball['runs']['batsman']
+            stats_dict[batsman]['total balls'] += 1
+    return stats_dict
+
+def batsman_num_balls(match, player):
+    total = 0
+    for ball_num, ball in match.balls():
+        if ball['batsman'] == player:
+            # TODO: Check for extras
+            total += 1
 
 def unique_everseen(iterable, key=None):
     """List unique elements, preserving order. Remember all elements ever seen.

@@ -1,6 +1,7 @@
 import unittest
 from batsman_features import *
 from extract_features import parse_yaml
+from pprint import pprint
 
 class TestBatsmenFeatures(unittest.TestCase):
     """
@@ -9,8 +10,10 @@ class TestBatsmenFeatures(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         yaml_file = "./raw-data/test-data/3-overs-335982.yaml"
+        yaml_file2 = "./raw-data/test-data/3-overs-335983.yaml"
         cls.yaml_data = parse_yaml(yaml_file)
         cls.match = Match(cls.yaml_data, yaml_file)
+        cls.match2 = Match(parse_yaml(yaml_file2), yaml_file2)
         cls.ball_1_point_2 = {
             'batsman': 'BB '
             'McCullum',
@@ -132,6 +135,14 @@ class TestBatsmenFeatures(unittest.TestCase):
         print(output, expected)
         for o, e in zip(output, expected):
             self.assertAlmostEqual(o, e)
+
+    def test_get_player_stats_dict(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(d['BB McCullum']['total runs'], 23)
+        self.assertEqual(d['BB McCullum']['total balls'], 14)
+        self.assertEqual(d['JR Hopes']['total runs'], 14)
+        self.assertEqual(d['JR Hopes']['total balls'], 8)
 
 if __name__ == '__main__':
     unittest.main()
