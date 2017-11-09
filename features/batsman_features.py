@@ -2,8 +2,11 @@
 
 import pprint
 from itertools import chain, filterfalse, islice, repeat, tee
+from collections import defaultdict
 
 default_strike_rate = 100
+# TODO: Change this to the actual average.
+default_average = 10
 
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
@@ -15,6 +18,29 @@ def flatten_list_of_dicts(dict_list):
             # assert k not in flat_dict
             flat_dict[k] = v
     return flat_dict
+
+def get_player_stats_dict(matches):
+    """Return a dict of all player stats over matches."""
+    stats_dict = defaultdict(lambda: {'total runs': 0,
+                                      'total balls': 0,
+                                      'matches played': 0})
+    for match in matches:
+        match_batsmen = {}
+        for ix, ball in match.balls():
+            batsman = ball['batsman']
+            stats_dict[batsman]['total runs'] += ball['runs']['batsman']
+            stats_dict[batsman]['total balls'] += 1
+            match_batsmen[batsman] = True
+        for batsman in match_batsmen:
+            stats_dict[batsman]['matches played'] += 1
+    return stats_dict
+
+def batsman_num_balls(match, player):
+    total = 0
+    for ball_num, ball in match.balls():
+        if ball['batsman'] == player:
+            # TODO: Check for extras
+            total += 1
 
 def unique_everseen(iterable, key=None):
     """List unique elements, preserving order. Remember all elements ever seen.
@@ -105,13 +131,27 @@ class Match:
         print("\nMatch info:", self.file_name)
         print(self.teams())
 
-    def print_past_stats(self, past_matches):
+    def print_past_stats(self, stats_dict):
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
         for player in team1:
-            print(player, batsman_total_over_matches(past_matches, player))
+            print(player, batsman_total_over_matches(stats_dict, player))
         for player in team2:
-            print(player, batsman_total_over_matches(past_matches, player))
+            print(player, batsman_total_over_matches(stats_dict, player))
+
+    def team_strike_rates(self, stats_dict, team):
+        """Strike rates for all players in team using stats_dict.
+        """
+        strike_rates = [batsman_overall_strike_rate(stats_dict, player) for player in team]
+        strike_rates = list(islice(chain(strike_rates, repeat(default_strike_rate)), 11))
+        return strike_rates
+
+    def team_averages(self, stats_dict, team):
+        """Averages for all players in team using stats_dict.
+        """
+        averages = [batsman_average(stats_dict, player) for player in team]
+        averages = list(islice(chain(averages, repeat(default_average)), 11))
+        return averages
 
     def features(self, past_matches):
         """Return features usable as a training data point.
@@ -119,16 +159,39 @@ class Match:
         For now, return 11 players on the first-batting side, 11 players on
         the bowling side, and match outcome.
         """
+        stats_dict = get_player_stats_dict(past_matches)
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
         self.print_match_info()
-        self.print_past_stats(past_matches)
+        self.print_past_stats(stats_dict)
 
         result = []
-        team1_features = [batsman_overall_strike_rate(past_matches, player) for player in team1]
-        team1_features = list(islice(chain(team1_features, repeat(default_strike_rate)), 11))
-        team2_features = [batsman_overall_strike_rate(past_matches, player) for player in team2]
-        team2_features = list(islice(chain(team2_features, repeat(default_strike_rate)), 11))
+        team1_features = self.team_strike_rates(stats_dict, team1)
+        team2_features = self.team_strike_rates(stats_dict, team2)
+
+        if self.first_batting_side_won():
+            outcome = 1
+        else:
+            outcome = 0
+        result = team1_features + team2_features + [outcome]
+        assert len(result) == 23
+        return result
+
+    def features_average(self, past_matches):
+        """Return features usable as a training data point.
+
+        For now, return 11 players on the first-batting side, 11 players on
+        the bowling side, and match outcome.
+        """
+        stats_dict = get_player_stats_dict(past_matches)
+        team1 = self.get_first_batting_side_players()
+        team2 = self.get_second_batting_side_players()
+        self.print_match_info()
+        self.print_past_stats(stats_dict)
+
+        result = []
+        team1_features = self.team_averages(stats_dict, team1)
+        team2_features = self.team_averages(stats_dict, team2)
 
         if self.first_batting_side_won():
             outcome = 1
@@ -167,15 +230,25 @@ def batsman_strike_rate(match, player):
     else:
         return 100 * total / balls
 
-def batsman_total_over_matches(matches, player):
-    return sum([batsman_total(match, player) for match in matches])
+def batsman_total_over_matches(stats_dict, player):
+    return stats_dict[player]['total runs']
 
-def batsman_num_balls_over_matches(matches, player):
-    return sum([batsman_num_balls(match, player) for match in matches])
+def batsman_num_balls_over_matches(stats_dict, player):
+    return stats_dict[player]['total balls']
 
-def batsman_overall_strike_rate(matches, player):
-    balls = batsman_num_balls_over_matches(matches, player)
+def batsman_num_matches(stats_dict, player):
+    return stats_dict[player]['matches played']
+
+def batsman_overall_strike_rate(stats_dict, player):
+    balls = batsman_num_balls_over_matches(stats_dict, player)
     if balls == 0:
         return default_strike_rate
     else:
-        return 100 * batsman_total_over_matches(matches, player) / balls
+        return 100 * batsman_total_over_matches(stats_dict, player) / balls
+
+def batsman_average(stats_dict, player):
+    num_matches = batsman_num_matches(stats_dict, player)
+    if num_matches == 0:
+        return default_average
+    else:
+        return batsman_total_over_matches(stats_dict, player) / num_matches

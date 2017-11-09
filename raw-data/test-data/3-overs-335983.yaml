@@ -1,0 +1,349 @@
+---
+meta:
+  data_version: 0.9
+  created: 2011-05-06
+  revision: 2
+info:
+  city: Chandigarh
+  competition: IPL
+  dates:
+    - 2008-04-19
+  gender: male
+  match_type: T20
+  outcome:
+    by:
+      runs: 33
+    winner: Chennai Super Kings
+  overs: 20
+  player_of_match:
+    - MEK Hussey
+  teams:
+    - Kings XI Punjab
+    - Chennai Super Kings
+  toss:
+    decision: bat
+    winner: Chennai Super Kings
+  umpires:
+    - MR Benson
+    - SL Shastri
+  venue: 'Punjab Cricket Association Stadium, Mohali'
+innings:
+  - 1st innings:
+      team: Chennai Super Kings
+      deliveries:
+        - 0.1:
+            batsman: PA Patel
+            bowler: B Lee
+            non_striker: ML Hayden
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 0.2:
+            batsman: PA Patel
+            bowler: B Lee
+            non_striker: ML Hayden
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 0.3:
+            batsman: PA Patel
+            bowler: B Lee
+            non_striker: ML Hayden
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 0.4:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: PA Patel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 0.5:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: PA Patel
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 0.6:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: PA Patel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 1.1:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            non_striker: ML Hayden
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 1.2:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            non_striker: ML Hayden
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 1.3:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            non_striker: ML Hayden
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 1.4:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            non_striker: ML Hayden
+            runs:
+              batsman: 2
+              extras: 0
+              total: 2
+        - 1.5:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            extras:
+              wides: 1
+            non_striker: ML Hayden
+            runs:
+              batsman: 0
+              extras: 1
+              total: 1
+        - 1.6:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            non_striker: ML Hayden
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 1.7:
+            batsman: PA Patel
+            bowler: S Sreesanth
+            non_striker: ML Hayden
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 2.1:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: PA Patel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 2.2:
+            batsman: ML Hayden
+            bowler: B Lee
+            extras:
+              noballs: 1
+            non_striker: PA Patel
+            runs:
+              batsman: 4
+              extras: 1
+              total: 5
+        - 2.3:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: PA Patel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 2.4:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: PA Patel
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 2.5:
+            batsman: PA Patel
+            bowler: B Lee
+            non_striker: ML Hayden
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+            wicket:
+              fielders:
+                - KC Sangakkara
+              kind: caught
+              player_out: PA Patel
+        - 2.6:
+            batsman: MEK Hussey
+            bowler: B Lee
+            non_striker: ML Hayden
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 2.7:
+            batsman: ML Hayden
+            bowler: B Lee
+            non_striker: MEK Hussey
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+  - 2nd innings:
+      team: Kings XI Punjab
+      deliveries:
+        - 0.1:
+            batsman: K Goel
+            bowler: JDP Oram
+            non_striker: JR Hopes
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 0.2:
+            batsman: K Goel
+            bowler: JDP Oram
+            non_striker: JR Hopes
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 0.3:
+            batsman: K Goel
+            bowler: JDP Oram
+            non_striker: JR Hopes
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 0.4:
+            batsman: K Goel
+            bowler: JDP Oram
+            non_striker: JR Hopes
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 0.5:
+            batsman: JR Hopes
+            bowler: JDP Oram
+            non_striker: K Goel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 0.6:
+            batsman: JR Hopes
+            bowler: JDP Oram
+            non_striker: K Goel
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 1.1:
+            batsman: K Goel
+            bowler: MS Gony
+            non_striker: JR Hopes
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 1.2:
+            batsman: JR Hopes
+            bowler: MS Gony
+            non_striker: K Goel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 1.3:
+            batsman: JR Hopes
+            bowler: MS Gony
+            non_striker: K Goel
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 1.4:
+            batsman: K Goel
+            bowler: MS Gony
+            non_striker: JR Hopes
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 1.5:
+            batsman: K Goel
+            bowler: MS Gony
+            non_striker: JR Hopes
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 1.6:
+            batsman: K Goel
+            bowler: MS Gony
+            non_striker: JR Hopes
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 2.1:
+            batsman: K Goel
+            bowler: JDP Oram
+            non_striker: JR Hopes
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 2.2:
+            batsman: JR Hopes
+            bowler: JDP Oram
+            non_striker: K Goel
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 2.3:
+            batsman: JR Hopes
+            bowler: JDP Oram
+            non_striker: K Goel
+            runs:
+              batsman: 0
+              extras: 0
+              total: 0
+        - 2.4:
+            batsman: JR Hopes
+            bowler: JDP Oram
+            non_striker: K Goel
+            runs:
+              batsman: 4
+              extras: 0
+              total: 4
+        - 2.5:
+            batsman: JR Hopes
+            bowler: JDP Oram
+            non_striker: K Goel
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
+        - 2.6:
+            batsman: K Goel
+            bowler: JDP Oram
+            non_striker: JR Hopes
+            runs:
+              batsman: 1
+              extras: 0
+              total: 1
