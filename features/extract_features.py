@@ -166,12 +166,20 @@ def generate_stats_for_average(file_name_template, starting_season = 2, ending_s
         write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
 
+def generate_stats_for(target):
+    """Generic function to get different datasets based on target."""
+    if target == 'strike rates alone':
+        generate_stats('extracted-stats/season%d-alone-rolling-stats.mat')
+    elif target == 'averages 2-4':
+        generate_stats_for_average('extracted-stats/season%d-alone-average.mat', 2, 4)
+    elif target == 'averages 5-10':
+        generate_stats_for_average('extracted-stats/season%d-alone-average.mat', 5, 10)
+
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
     # test_matrix_save()
     # test_parse_yaml()
 
     # test_reading_files()
-
-    # generate_stats('extracted-stats/season%d-alone-rolling-stats.mat')
-    generate_stats_for_average('extracted-stats/season%d-alone-average.mat')
+    target = 'averages 5-10'
+    generate_stats_for(target)
