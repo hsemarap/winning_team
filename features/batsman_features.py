@@ -146,6 +146,12 @@ class Match:
         strike_rates = list(islice(chain(strike_rates, repeat(default_strike_rate)), 11))
         return strike_rates
 
+    def team_averages(self, stats_dict, team):
+        """Averages for all players in team using stats_dict.
+        """
+        averages = [batsman_average(stats_dict, player) for player in team]
+        averages = list(islice(chain(averages, repeat(default_average)), 11))
+        return averages
 
     def features(self, past_matches):
         """Return features usable as a training data point.
@@ -162,6 +168,30 @@ class Match:
         result = []
         team1_features = self.team_strike_rates(stats_dict, team1)
         team2_features = self.team_strike_rates(stats_dict, team2)
+
+        if self.first_batting_side_won():
+            outcome = 1
+        else:
+            outcome = 0
+        result = team1_features + team2_features + [outcome]
+        assert len(result) == 23
+        return result
+
+    def features_average(self, past_matches):
+        """Return features usable as a training data point.
+
+        For now, return 11 players on the first-batting side, 11 players on
+        the bowling side, and match outcome.
+        """
+        stats_dict = get_player_stats_dict(past_matches)
+        team1 = self.get_first_batting_side_players()
+        team2 = self.get_second_batting_side_players()
+        self.print_match_info()
+        self.print_past_stats(stats_dict)
+
+        result = []
+        team1_features = self.team_averages(stats_dict, team1)
+        team2_features = self.team_averages(stats_dict, team2)
 
         if self.first_batting_side_won():
             outcome = 1

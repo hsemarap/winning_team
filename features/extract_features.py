@@ -91,7 +91,7 @@ def write_feature_matrix(mxs, path):
 def concat(xs):
     return list(itertools.chain(*xs))
 
-def generate_stats():
+def generate_stats(file_name_template):
     season1_dir = './raw-data/ipl/season-1-2008'
     season2_dir = './raw-data/ipl/season-2-2009'
     season3_dir = './raw-data/ipl/season-3-2010'
@@ -107,8 +107,8 @@ def generate_stats():
     # num_files = 1
     season1_matches = get_matches(season1_dir, num_files)
 
-    # later_seasons = [season2_dir, season3_dir, season4_dir]
-    later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
+    later_seasons = [season2_dir, season3_dir, season4_dir]
+    # later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
 
     # num_files = 1
     num_files = None
@@ -126,7 +126,45 @@ def generate_stats():
 
     start_index = 2
     for matrix in mmxs:
-        write_feature_matrix(matrix, 'extracted-stats/season%d-alone-rolling-stats.mat' % start_index)
+        write_feature_matrix(matrix, file_name_template % start_index)
+        start_index += 1
+
+def generate_stats_for_average(file_name_template):
+    season1_dir = './raw-data/ipl/season-1-2008'
+    season2_dir = './raw-data/ipl/season-2-2009'
+    season3_dir = './raw-data/ipl/season-3-2010'
+    season4_dir = './raw-data/ipl/season-4-2011'
+    season5_dir = './raw-data/ipl/season-5-2012'
+    season6_dir = './raw-data/ipl/season-6-2013'
+    season7_dir = './raw-data/ipl/season-7-2014'
+    season8_dir = './raw-data/ipl/season-8-2015'
+    season9_dir = './raw-data/ipl/season-9-2016'
+    season10_dir = './raw-data/ipl/season-10-2017'
+
+    num_files = None
+    # num_files = 1
+    season1_matches = get_matches(season1_dir, num_files)
+
+    later_seasons = [season2_dir, season3_dir, season4_dir]
+    # later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
+
+    # num_files = 1
+    num_files = None
+    per_season_matches = [get_matches(f, num_files) for f in later_seasons]
+
+    later_matches = concat(per_season_matches)
+
+    # last = 1
+    last = len(later_matches)
+
+    mmxs = rolling_stats(per_season_matches,
+                         lambda s, past_ss: (rolling_stats(s[:last], lambda x, xs: x.features_average(xs), concat(past_ss))),
+                         [season1_matches])
+                         # [season1_matches, season2_matches, season3_matches, season4_matches])
+
+    start_index = 2
+    for matrix in mmxs:
+        write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
 
 if __name__ == '__main__':
@@ -135,4 +173,6 @@ if __name__ == '__main__':
     # test_parse_yaml()
 
     # test_reading_files()
-    generate_stats()
+
+    # generate_stats('extracted-stats/season%d-alone-rolling-stats.mat')
+    generate_stats_for_average('extracted-stats/season%d-alone-average.mat')
