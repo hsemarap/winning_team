@@ -4,12 +4,16 @@
 %            y(i) is the label (+1 or -1) of the i-th sample
 % Output: vector theta of d rows, 1 column
 function [theta status] = linprimalsvm(X,y)
-Xsize = size(X);
-n = Xsize(1);
-d = Xsize(2);
+[n, d] = size(X);
 H = eye(d);
 f = zeros(d, 1);
-A = -y .* X;
+A = zeros(n, d);
 b = ones(n, 1) * -1;
+for i = 1:n
+    for j = 1:d
+        A(i, j) = -y(i) * X(i, j);
+    end
+end
 options = optimset('Display','off');
+%theta = quadprog(H, f, A, b)
 [theta Fval status] = quadprog(H,f,A,b, [], [], [], [], [], options);
