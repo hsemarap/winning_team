@@ -129,7 +129,7 @@ def generate_stats(file_name_template):
         write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
 
-def generate_stats_for_average(file_name_template):
+def generate_stats_for_average(file_name_template, starting_season = 2, ending_season = 4):
     season1_dir = './raw-data/ipl/season-1-2008'
     season2_dir = './raw-data/ipl/season-2-2009'
     season3_dir = './raw-data/ipl/season-3-2010'
@@ -141,28 +141,27 @@ def generate_stats_for_average(file_name_template):
     season9_dir = './raw-data/ipl/season-9-2016'
     season10_dir = './raw-data/ipl/season-10-2017'
 
-    num_files = None
+    all_seasons = [season1_dir, season2_dir, season3_dir, season4_dir,
+                   season5_dir, season6_dir, season7_dir, season8_dir,
+                   season9_dir, season10_dir]
+
+    # Non-inclusive
+    past_seasons = all_seasons[:starting_season-1]
+    current_seasons = all_seasons[starting_season-1:ending_season]
+
     # num_files = 1
-    season1_matches = get_matches(season1_dir, num_files)
-
-    later_seasons = [season2_dir, season3_dir, season4_dir]
-    # later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
+    num_files = None
+    past_season_matches = [get_matches(f, num_files) for f in past_seasons]
 
     # num_files = 1
     num_files = None
-    per_season_matches = [get_matches(f, num_files) for f in later_seasons]
+    current_season_matches = [get_matches(f, num_files) for f in current_seasons]
 
-    later_matches = concat(per_season_matches)
+    mmxs = rolling_stats(current_season_matches,
+                         lambda s, past_ss: (rolling_stats(s, lambda x, xs: x.features_average(xs), concat(past_ss))),
+                         past_season_matches)
 
-    # last = 1
-    last = len(later_matches)
-
-    mmxs = rolling_stats(per_season_matches,
-                         lambda s, past_ss: (rolling_stats(s[:last], lambda x, xs: x.features_average(xs), concat(past_ss))),
-                         [season1_matches])
-                         # [season1_matches, season2_matches, season3_matches, season4_matches])
-
-    start_index = 2
+    start_index = starting_season
     for matrix in mmxs:
         write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
