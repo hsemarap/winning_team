@@ -5,6 +5,8 @@ from itertools import chain, filterfalse, islice, repeat, tee
 from collections import defaultdict
 
 default_strike_rate = 100
+# TODO: Change this to the actual average.
+default_average = 10
 
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
@@ -19,12 +21,18 @@ def flatten_list_of_dicts(dict_list):
 
 def get_player_stats_dict(matches):
     """Return a dict of all player stats over matches."""
-    stats_dict = defaultdict(lambda: {'total runs': 0, 'total balls': 0})
+    stats_dict = defaultdict(lambda: {'total runs': 0,
+                                      'total balls': 0,
+                                      'matches played': 0})
     for match in matches:
+        match_batsmen = {}
         for ix, ball in match.balls():
             batsman = ball['batsman']
             stats_dict[batsman]['total runs'] += ball['runs']['batsman']
             stats_dict[batsman]['total balls'] += 1
+            match_batsmen[batsman] = True
+        for batsman in match_batsmen:
+            stats_dict[batsman]['matches played'] += 1
     return stats_dict
 
 def batsman_num_balls(match, player):
@@ -198,9 +206,19 @@ def batsman_total_over_matches(stats_dict, player):
 def batsman_num_balls_over_matches(stats_dict, player):
     return stats_dict[player]['total balls']
 
+def batsman_num_matches(stats_dict, player):
+    return stats_dict[player]['matches played']
+
 def batsman_overall_strike_rate(stats_dict, player):
     balls = batsman_num_balls_over_matches(stats_dict, player)
     if balls == 0:
         return default_strike_rate
     else:
         return 100 * batsman_total_over_matches(stats_dict, player) / balls
+
+def batsman_average(stats_dict, player):
+    num_matches = batsman_num_matches(stats_dict, player)
+    if num_matches == 0:
+        return default_average
+    else:
+        return batsman_total_over_matches(stats_dict, player) / num_matches

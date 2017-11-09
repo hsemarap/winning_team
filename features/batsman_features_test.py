@@ -143,6 +143,19 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(d['BB McCullum']['total balls'], 14)
         self.assertEqual(d['JR Hopes']['total runs'], 14)
         self.assertEqual(d['JR Hopes']['total balls'], 8)
+        self.assertEqual(d['BB McCullum']['matches played'], 1)
+
+    def test_batsman_num_matches(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(batsman_num_matches(d, 'BB McCullum'), 1)
+        self.assertEqual(batsman_num_matches(d, 'Foo'), 0)
+
+    def test_batsman_average(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(batsman_average(d, 'BB McCullum'), 23)
+        self.assertEqual(batsman_average(d, 'Foo'), default_average)
 
 if __name__ == '__main__':
     unittest.main()
