@@ -91,51 +91,17 @@ def write_feature_matrix(mxs, path):
 def concat(xs):
     return list(itertools.chain(*xs))
 
-def generate_stats(file_name_template):
-    season1_dir = './raw-data/ipl/season-1-2008'
-    season2_dir = './raw-data/ipl/season-2-2009'
-    season3_dir = './raw-data/ipl/season-3-2010'
-    season4_dir = './raw-data/ipl/season-4-2011'
-    season5_dir = './raw-data/ipl/season-5-2012'
-    season6_dir = './raw-data/ipl/season-6-2013'
-    season7_dir = './raw-data/ipl/season-7-2014'
-    season8_dir = './raw-data/ipl/season-8-2015'
-    season9_dir = './raw-data/ipl/season-9-2016'
-    season10_dir = './raw-data/ipl/season-10-2017'
-
-    num_files = None
-    # num_files = 1
-    season1_matches = get_matches(season1_dir, num_files)
-
-    later_seasons = [season2_dir, season3_dir, season4_dir]
-    # later_seasons = [season2_dir, season3_dir, season4_dir] + [season5_dir, season6_dir, season7_dir, season8_dir, season9_dir, season10_dir]
-
-    # num_files = 1
-    num_files = None
-    per_season_matches = [get_matches(f, num_files) for f in later_seasons]
-
-    later_matches = concat(per_season_matches)
-
-    # last = 1
-    last = len(later_matches)
-
-    mmxs = rolling_stats(per_season_matches,
-                         lambda s, past_ss: (rolling_stats(s[:last], lambda x, xs: x.features(xs), concat(past_ss))),
-                         [season1_matches])
-                         # [season1_matches, season2_matches, season3_matches, season4_matches])
-
-    start_index = 2
-    for matrix in mmxs:
-        write_feature_matrix(matrix, file_name_template % start_index)
-        start_index += 1
-
 def write_all_feature_matrices(matrices, file_name_template, starting_season):
     start_index = starting_season
     for matrix in matrices:
         write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
 
-def generate_stats_for_average(file_name_template, starting_season = 2, ending_season = 4):
+def get_current_and_past_season_matches(starting_season = 2, ending_season = 4):
+    """Return per-season list of matches (past list, current list).
+
+    past list: list of season matches from 1 to starting_season - 1.
+    current list: list of season matches from starting_season to ending_season."""
     season1_dir = './raw-data/ipl/season-1-2008'
     season2_dir = './raw-data/ipl/season-2-2009'
     season3_dir = './raw-data/ipl/season-3-2010'
@@ -158,30 +124,44 @@ def generate_stats_for_average(file_name_template, starting_season = 2, ending_s
     # num_files = 1
     num_files = None
     past_season_matches = [get_matches(f, num_files) for f in past_seasons]
-
     # num_files = 1
     num_files = None
     current_season_matches = [get_matches(f, num_files) for f in current_seasons]
 
-    mmxs = rolling_stats(current_season_matches,
-                         lambda s, past_ss: (rolling_stats(s, lambda x, xs: x.features_average(xs), concat(past_ss))),
-                         past_season_matches)
+    assert len(past_season_matches) == starting_season - 1
+    assert len(current_season_matches) == ending_season - starting_season + 1
+    return (past_season_matches, current_season_matches)
+
+def rolling_stats_respect_structure(xs, stat_fn, past):
+    """Get rolling stats returning the same list-of-lists structure as xs.
+
+    For example, if xs is a list of season matches, then the output will have
+    stats for each match but in the same list of lists structure. """
+    mmxs = rolling_stats(xs,
+                         lambda s, past_ss: (rolling_stats(s, stat_fn, concat(past_ss))),
+                         past)
     return mmxs
 
-def generate_and_write_season_matrices(starting_season, ending_season, file_name_template):
-    """
-    """
-    matrices = generate_stats_for_average(file_name_template, starting_season, ending_season)
+def generate_and_write_season_matrices(starting_season, ending_season, stat_fn, file_name_template):
+    """Generate rolling stats for each season and write to files."""
+    (past_season_matches, current_season_matches) = get_current_and_past_season_matches(
+        starting_season, ending_season)
+    matrices = rolling_stats_respect_structure(
+        current_season_matches,
+        stat_fn,
+        past_season_matches)
     write_all_feature_matrices(matrices, file_name_template, starting_season)
 
 def generate_stats_for(target):
     """Generic function to get different datasets based on target."""
+    average_fn = lambda x, xs: x.get_features_average(xs)
+    strike_rate_fn = lambda x, xs: x.get_features_strike_rate(xs)
     if target == 'strike rates alone':
-        generate_stats('extracted-stats/season%d-alone-rolling-stats.mat')
+        generate_and_write_season_matrices(2, 4, strike_rate_fn,'extracted-stats/season%d-alone-rolling-stats.mat')
     elif target == 'averages 2-4':
-        generate_and_write_season_matrices(2, 4, 'extracted-stats/season%d-alone-average.mat')
+        generate_and_write_season_matrices(2, 4, average_fn, 'extracted-stats/season%d-alone-average.mat')
     elif target == 'averages 5-10':
-        generate_and_write_season_matrices(5, 10, 'extracted-stats/season%d-alone-average.mat')
+        generate_and_write_season_matrices(5, 10, average_fn, 'extracted-stats/season%d-alone-average.mat')
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')

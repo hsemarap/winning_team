@@ -153,8 +153,8 @@ class Match:
         averages = list(islice(chain(averages, repeat(default_average)), 11))
         return averages
 
-    def features(self, past_matches):
-        """Return features usable as a training data point.
+    def get_features_strike_rate(self, past_matches):
+        """Return strike-rate features usable as a training data point.
 
         For now, return 11 players on the first-batting side, 11 players on
         the bowling side, and match outcome.
@@ -177,7 +177,7 @@ class Match:
         assert len(result) == 23
         return result
 
-    def features_average(self, past_matches):
+    def get_features_average(self, past_matches):
         """Return features usable as a training data point.
 
         For now, return 11 players on the first-batting side, 11 players on

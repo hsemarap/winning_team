@@ -13,5 +13,12 @@ class TestExtractFeatures(unittest.TestCase):
     def test_concat(self):
         self.assertEqual(concat([[1, 2], [3, 4]]), [1, 2, 3, 4])
 
+    def test_rolling_stats_respect_structure(self):
+        self.assertEqual(rolling_stats_respect_structure(
+            [[5, 6, 7], [8]],
+            lambda x, xs: x + sum(xs),
+            [[1, 2], [3, 4]]),
+            [[15, 21, 28], [36]])
+
 if __name__ == '__main__':
     unittest.main()
