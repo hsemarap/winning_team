@@ -160,9 +160,9 @@ class Match:
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
         for player in team1:
-            print(player, batsman_total_over_matches(stats_dict, player))
+            print(player, stats_dict[player])
         for player in team2:
-            print(player, batsman_total_over_matches(stats_dict, player))
+            print(player, stats_dict[player])
 
     def team_strike_rates(self, stats_dict, team):
         """Strike rates for all players in team using stats_dict.
@@ -184,6 +184,14 @@ class Match:
         economies = [bowler_economy(stats_dict, player) for player in team]
         economies = list(islice(chain(economies, repeat(default_bowling_economy)), 11))
         return economies
+
+    # TODO: Refactor.
+    def team_bowling_strike_rates(self, stats_dict, team):
+        """Bowling strike rates for all players in team using stats_dict.
+        """
+        strike_rates = [bowler_strike_rate(stats_dict, player) for player in team]
+        strike_rates = list(islice(chain(strike_rates, repeat(default_bowling_strike_rate)), 11))
+        return strike_rates
 
     def get_features(self, features_fn, past_matches):
         """Return features usable as a training data point.
