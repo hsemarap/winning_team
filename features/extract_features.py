@@ -154,14 +154,14 @@ def generate_and_write_season_matrices(starting_season, ending_season, stat_fn, 
 
 def generate_stats_for(target):
     """Generic function to get different datasets based on target."""
-    average_fn = lambda x, xs: x.get_features_average(xs)
-    strike_rate_fn = lambda x, xs: x.get_features_strike_rate(xs)
     if target == 'strike rates alone':
-        generate_and_write_season_matrices(2, 4, strike_rate_fn,'extracted-stats/season%d-alone-rolling-stats.mat')
+        generate_and_write_season_matrices(2, 4, strike_rate_features_fn,'extracted-stats/season%d-alone-rolling-stats.mat')
     elif target == 'averages 2-4':
-        generate_and_write_season_matrices(2, 4, average_fn, 'extracted-stats/season%d-alone-average.mat')
+        generate_and_write_season_matrices(2, 4, average_features_fn, 'extracted-stats/season%d-alone-average.mat')
     elif target == 'averages 5-10':
-        generate_and_write_season_matrices(5, 10, average_fn, 'extracted-stats/season%d-alone-average.mat')
+        generate_and_write_season_matrices(5, 10, average_features_fn, 'extracted-stats/season%d-alone-average.mat')
+    # elif target == 'bowling averages 2-4':
+    #     generate_and_write_season_matrices(2, 4, bowling_average_fn, 'extracted-stats/season%d-alone-bowling-average.mat')
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')

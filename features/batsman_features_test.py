@@ -125,11 +125,23 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(self.match.first_batting_side_won(), True)
 
     def test_match_features_strike_rate(self):
-        output = self.match.get_features_strike_rate([self.match])
+        output = strike_rate_features_fn(self.match, [self.match])
         x = default_strike_rate
         expected = [0.0, 164.28571428571428, x, x,
                     x, x, x, x, x, x, x,
                     66.66666666666667, 10.0, 20.0, 100.0,
+                    x, x, x, x, x, x, x,
+                    1]
+        print(output, expected)
+        for o, e in zip(output, expected):
+            self.assertAlmostEqual(o, e)
+
+    def test_match_features(self):
+        output = average_features_fn(self.match, [self.match])
+        x = default_average
+        expected = [0.0, 23.0, x, x,
+                    x, x, x, x, x, x, x,
+                    2.0, 1.0, 1.0, 1.0,
                     x, x, x, x, x, x, x,
                     1]
         print(output, expected)

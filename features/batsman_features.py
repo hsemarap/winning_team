@@ -8,6 +8,9 @@ default_strike_rate = 100
 # TODO: Change this to the actual average.
 default_average = 10
 
+average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
+strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
+
 def flatten_list_of_dicts(dict_list):
     flat_dict = {}
     for d in dict_list:
@@ -153,35 +156,15 @@ class Match:
         averages = list(islice(chain(averages, repeat(default_average)), 11))
         return averages
 
-    def get_features_strike_rate(self, past_matches):
-        """Return strike-rate features usable as a training data point.
-
-        For now, return 11 players on the first-batting side, 11 players on
-        the bowling side, and match outcome.
-        """
-        stats_dict = get_player_stats_dict(past_matches)
-        team1 = self.get_first_batting_side_players()
-        team2 = self.get_second_batting_side_players()
-        self.print_match_info()
-        self.print_past_stats(stats_dict)
-
-        result = []
-        team1_features = self.team_strike_rates(stats_dict, team1)
-        team2_features = self.team_strike_rates(stats_dict, team2)
-
-        if self.first_batting_side_won():
-            outcome = 1
-        else:
-            outcome = 0
-        result = team1_features + team2_features + [outcome]
-        assert len(result) == 23
-        return result
-
-    def get_features_average(self, past_matches):
+    def get_features(self, features_fn, past_matches):
         """Return features usable as a training data point.
 
         For now, return 11 players on the first-batting side, 11 players on
         the bowling side, and match outcome.
+
+        features_fn must take a match, stats_dict, and team and return a list
+        of features for the team.
+
         """
         stats_dict = get_player_stats_dict(past_matches)
         team1 = self.get_first_batting_side_players()
@@ -190,8 +173,8 @@ class Match:
         self.print_past_stats(stats_dict)
 
         result = []
-        team1_features = self.team_averages(stats_dict, team1)
-        team2_features = self.team_averages(stats_dict, team2)
+        team1_features = features_fn(self, stats_dict, team1)
+        team2_features = features_fn(self, stats_dict, team2)
 
         if self.first_batting_side_won():
             outcome = 1
