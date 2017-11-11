@@ -180,6 +180,11 @@ class TestBatsmenFeatures(unittest.TestCase):
         d = get_player_stats_dict(matches)
         self.assertEqual(bowler_economy(d, 'JDP Oram'), 10.0)
         self.assertEqual(bowler_economy(d, 'Foo'), default_bowling_economy)
+    def test_bowler_strike_rate(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(bowler_strike_rate(d, 'Foo'), default_bowling_strike_rate)
+        self.assertEqual(bowler_strike_rate(d, 'B Lee'), 13.0)
 
 if __name__ == '__main__':
     unittest.main()
