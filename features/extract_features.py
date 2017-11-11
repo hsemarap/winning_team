@@ -129,6 +129,12 @@ def generate_stats(file_name_template):
         write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
 
+def write_all_feature_matrices(matrices, file_name_template, starting_season):
+    start_index = starting_season
+    for matrix in matrices:
+        write_feature_matrix(matrix, file_name_template % start_index)
+        start_index += 1
+
 def generate_stats_for_average(file_name_template, starting_season = 2, ending_season = 4):
     season1_dir = './raw-data/ipl/season-1-2008'
     season2_dir = './raw-data/ipl/season-2-2009'
@@ -160,20 +166,22 @@ def generate_stats_for_average(file_name_template, starting_season = 2, ending_s
     mmxs = rolling_stats(current_season_matches,
                          lambda s, past_ss: (rolling_stats(s, lambda x, xs: x.features_average(xs), concat(past_ss))),
                          past_season_matches)
+    return mmxs
 
-    start_index = starting_season
-    for matrix in mmxs:
-        write_feature_matrix(matrix, file_name_template % start_index)
-        start_index += 1
+def generate_and_write_season_matrices(starting_season, ending_season, file_name_template):
+    """
+    """
+    matrices = generate_stats_for_average(file_name_template, starting_season, ending_season)
+    write_all_feature_matrices(matrices, file_name_template, starting_season)
 
 def generate_stats_for(target):
     """Generic function to get different datasets based on target."""
     if target == 'strike rates alone':
         generate_stats('extracted-stats/season%d-alone-rolling-stats.mat')
     elif target == 'averages 2-4':
-        generate_stats_for_average('extracted-stats/season%d-alone-average.mat', 2, 4)
+        generate_and_write_season_matrices(2, 4, 'extracted-stats/season%d-alone-average.mat')
     elif target == 'averages 5-10':
-        generate_stats_for_average('extracted-stats/season%d-alone-average.mat', 5, 10)
+        generate_and_write_season_matrices(5, 10, 'extracted-stats/season%d-alone-average.mat')
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
@@ -181,5 +189,5 @@ if __name__ == '__main__':
     # test_parse_yaml()
 
     # test_reading_files()
-    target = 'averages 5-10'
+    target = 'averages 2-4'
     generate_stats_for(target)
