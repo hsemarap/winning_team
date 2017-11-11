@@ -1,9 +1,12 @@
-function accuracy = testdualsvm(Xtraincv, ytraincv, X, y, C, K_gamma)
+function accuracy = testdualsvm(Xtraincv, ytraincv, X, y, C, K_gamma, logs)
     [alpha status] = kerdualsvm(Xtraincv,ytraincv, C, K_gamma);  
     accuracy = 0;
     [total ~] = size(X);
     if status == -2
-        disp('Error: Kernel Dual SVM: Infeasible Problem')
+        if logs == true
+            disp('Error: Kernel Dual SVM: Infeasible Problem')
+        end
+        accuracy = -1;
         return
     end
     if total == 0
