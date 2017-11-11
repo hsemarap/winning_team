@@ -46,6 +46,11 @@ class TestBatsmenFeatures(unittest.TestCase):
     def setUp(self):
         pass
 
+    def assertAlmostEqualLists(self, outputList, expectedList):
+        """Assert that the given lists are element-wise almost equal."""
+        for o, e in zip(outputList, expectedList):
+            self.assertAlmostEqual(o, e)
+
     def test_flatten_list_of_dicts(self):
         self.assertEqual(flatten_list_of_dicts([{1: 2}, {2: 3}]),
                          {1: 2, 2: 3})
@@ -132,9 +137,7 @@ class TestBatsmenFeatures(unittest.TestCase):
                     66.66666666666667, 10.0, 20.0, 100.0,
                     x, x, x, x, x, x, x,
                     1]
-        print(output, expected)
-        for o, e in zip(output, expected):
-            self.assertAlmostEqual(o, e)
+        self.assertAlmostEqualLists(output, expected)
 
     def test_match_features(self):
         output = average_features_fn(self.match, [self.match])
@@ -144,9 +147,7 @@ class TestBatsmenFeatures(unittest.TestCase):
                     2.0, 1.0, 1.0, 1.0,
                     x, x, x, x, x, x, x,
                     1]
-        print(output, expected)
-        for o, e in zip(output, expected):
-            self.assertAlmostEqual(o, e)
+        self.assertAlmostEqualLists(output, expected)
 
     def test_get_player_stats_dict(self):
         matches = [self.match, self.match2]
