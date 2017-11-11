@@ -14,6 +14,6 @@ for i = 1:n
         A(i, j) = -y(i) * X(i, j);
     end
 end
-options = optimset('Display','off');
-%theta = quadprog(H, f, A, b)
+options = optimset('Display','on');
+%theta = quadprog(H, f, A, b); status=0;
 [theta Fval status] = quadprog(H,f,A,b, [], [], [], [], [], options);

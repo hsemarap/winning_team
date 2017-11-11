@@ -4,8 +4,10 @@ function accuracy = start(traincv_perc, k, F, n, d)
     season_end   = 10;
     cumulative = true;
     per_season = false;
-    feature_types = ["-alone-rolling-stats.mat", "-alone-average.mat"];
-    feature_types = ["-alone-average.mat"];
+    feature_types = ["-alone-rolling-stats.mat", "-alone-average.mat", "-alone-bowling-economy.mat"];
+    %feature_types = ["-alone-average.mat"];
+    %feature_types = ["-alone-rolling-stats.mat"];
+    %feature_types = ["-alone-bowling-economy.mat"];
 if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
         if cumulative
             fprintf("Season Cumulative statistics\n")
@@ -83,10 +85,14 @@ end
     ytest = y(ntraincv+1:n);
     
     if F < d
-        disp('Running Greedy Subset Selection')    
+        if logs
+            disp('Running Greedy Subset Selection')    
+        end
         [S ~] = greedysubset(F, X, y);
-        disp('Selecting features')
-        S
+        if logs
+            disp('Selecting features')
+            S
+        end
     else
         S =  1:d;
     end
@@ -99,7 +105,7 @@ end
     end
     accuracy = testprimsvm(Xtraincv, ytraincv, Xtest, ytest, logs);
     prim_acc = accuracy;
-    if logs == true
+    if logs == true && accuracy ~= -1
         fprintf('Primal SVM Accuracy: %f\n', accuracy);
     end
     %accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10, 1/2);
