@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pprint
+from pprint import pprint
 from itertools import chain, filterfalse, islice, repeat, tee
 from collections import defaultdict
 
@@ -16,6 +16,8 @@ average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
 strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
 bowling_economy_features_fn = lambda x, xs: x.get_features(Match.team_bowling_economies, xs)
 bowling_strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_bowling_strike_rates, xs)
+team_win_rate_features_fn = lambda x, xs: x.get_team_features(Match.team_win_rate, xs)
+team_net_run_rate_features_fn = lambda x, xs: x.get_team_features(Match.team_net_run_rate, xs)
 
 bowler_dismissals = ['caught', 'bowled', 'lbw', 'stumped', 'caught and bowled']
 
@@ -52,10 +54,11 @@ def get_player_stats_dict(matches):
         team2 = match.second_batting_side()
         stats_dict[team1]['matches'] += 1
         stats_dict[team2]['matches'] += 1
-        if details['info']['outcome']['winner'] == team1:
-            stats_dict[team1]['wins'] += 1
-        elif details['info']['outcome']['winner'] == team2:
-            stats_dict[team2]['wins'] += 1
+        if 'winner' in details['info']['outcome']:
+            if details['info']['outcome']['winner'] == team1:
+                stats_dict[team1]['wins'] += 1
+            elif details['info']['outcome']['winner'] == team2:
+                stats_dict[team2]['wins'] += 1
 
         for ix, ball in match.first_innings_balls():
             stats_dict[team1]['team total runs made'] += ball['runs']['total']
@@ -195,10 +198,12 @@ class Match:
     def print_past_stats(self, stats_dict):
         team1 = self.get_first_batting_side_players()
         team2 = self.get_second_batting_side_players()
-        for player in team1:
-            print(player, stats_dict[player])
-        for player in team2:
-            print(player, stats_dict[player])
+        pprint(stats_dict[self.first_batting_side()])
+        pprint(stats_dict[self.second_batting_side()])
+        # for player in team1:
+        #     print(player, stats_dict[player])
+        # for player in team2:
+        #     print(player, stats_dict[player])
 
     def team_strike_rates(self, stats_dict, team):
         """Strike rates for all players in team using stats_dict.
@@ -226,13 +231,13 @@ class Match:
         return features
 
     def team_win_rate(self, stats_dict, team):
-        """Get win rate for team."""
+        """Get win rate for team (in a singleton list)."""
         num_wins = stats_dict[team]['wins']
         num_matches = stats_dict[team]['matches']
         if num_matches == 0:
-            return default_win_rate
+            return [default_win_rate]
         else:
-            return num_wins / num_matches
+            return [num_wins / num_matches]
 
     def team_net_run_rate(self, stats_dict, team):
         """Get net run rate for team."""
@@ -241,23 +246,15 @@ class Match:
         total_runs_given = stats_dict[team]['team total runs given']
         total_overs_bowled = stats_dict[team]['team total balls bowled'] // 6
         if total_overs_bowled == 0 or total_overs_batted == 0:
-            return default_net_run_rate
+            return [default_net_run_rate]
         else:
-            return (total_runs_made / total_overs_batted) - (total_runs_given / total_overs_bowled)
+            return [(total_runs_made / total_overs_batted) - (total_runs_given / total_overs_bowled)]
 
-    def get_features(self, features_fn, past_matches):
-        """Return features usable as a training data point.
-
-        For now, return 11 players on the first-batting side, 11 players on
-        the bowling side, and match outcome.
-
-        features_fn must take a match, stats_dict, and team and return a list
-        of features for the team.
-
-        """
+    def get_team_features(self, features_fn, past_matches):
+        """Return features usable as a training data point."""
         stats_dict = get_player_stats_dict(past_matches)
-        team1 = self.get_first_batting_side_players()
-        team2 = self.get_second_batting_side_players()
+        team1 = self.first_batting_side()
+        team2 = self.second_batting_side()
         self.print_match_info()
         self.print_past_stats(stats_dict)
 
@@ -270,7 +267,35 @@ class Match:
         else:
             outcome = 0
         result = team1_features + team2_features + [outcome]
-        assert len(result) == 23
+        # assert len(result) == 23
+        return result
+
+    def get_features(self, features_fn, past_matches):
+        """Return features usable as a training data point.
+
+        For now, return 11 players on the first-batting side, 11 players on
+        the bowling side, and match outcome.
+
+        features_fn must take a match, stats_dict, and team and return a list
+        of features for the team.
+
+        """
+        stats_dict = get_player_stats_dict(past_matches)
+        team1_players = self.get_first_batting_side_players()
+        team2_players = self.get_second_batting_side_players()
+        self.print_match_info()
+        self.print_past_stats(stats_dict)
+
+        result = []
+        team1_features = features_fn(self, stats_dict, team1_players)
+        team2_features = features_fn(self, stats_dict, team2_players)
+
+        if self.first_batting_side_won():
+            outcome = 1
+        else:
+            outcome = 0
+        result = team1_features + team2_features + [outcome]
+        # assert len(result) == 23
         return result
 
 def runs_off_ball(player, ball):

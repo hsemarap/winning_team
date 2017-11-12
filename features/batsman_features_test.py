@@ -276,21 +276,29 @@ class TestBatsmenFeatures(unittest.TestCase):
         team1 = self.match.get_first_batting_side_players()
         team2 = self.match.get_second_batting_side_players()
         x = default_win_rate
-        self.assertEqual(self.match.team_win_rate(d, 'Foo'), default_win_rate)
-        self.assertEqual(self.match.team_win_rate(d, 'Kolkata Knight Riders'), 1)
-        self.assertEqual(self.match.team_win_rate(d, 'Royal Challengers Bangalore'), 0)
-        self.assertEqual(self.match.team_win_rate(d, 'Kings XI Punjab'), 0)
-        self.assertEqual(self.match.team_win_rate(d, 'Chennai Super Kings'), 1)
+        self.assertEqual(self.match.team_win_rate(d, 'Foo'), [default_win_rate])
+        self.assertEqual(self.match.team_win_rate(d, 'Kolkata Knight Riders'), [1])
+        self.assertEqual(self.match.team_win_rate(d, 'Royal Challengers Bangalore'), [0])
+        self.assertEqual(self.match.team_win_rate(d, 'Kings XI Punjab'), [0])
+        self.assertEqual(self.match.team_win_rate(d, 'Chennai Super Kings'), [1])
 
     def test_team_net_run_rate(self):
         matches = [self.match, self.match2]
         d = get_player_stats_dict(matches)
         x = default_net_run_rate
-        self.assertEqual(self.match.team_net_run_rate(d, 'Foo'), default_net_run_rate)
-        self.assertEqual(self.match.team_net_run_rate(d, 'Kolkata Knight Riders'), 27/3 - 11/3)
-        self.assertEqual(self.match.team_net_run_rate(d, 'Royal Challengers Bangalore'), 11/3 - 27/3)
-        self.assertEqual(self.match.team_net_run_rate(d, 'Kings XI Punjab'), 0)
-        self.assertEqual(self.match.team_net_run_rate(d, 'Chennai Super Kings'), 0)
+        self.assertEqual(self.match.team_net_run_rate(d, 'Foo'), [default_net_run_rate])
+        self.assertEqual(self.match.team_net_run_rate(d, 'Kolkata Knight Riders'), [27/3 - 11/3])
+        self.assertEqual(self.match.team_net_run_rate(d, 'Royal Challengers Bangalore'), [11/3 - 27/3])
+        self.assertEqual(self.match.team_net_run_rate(d, 'Kings XI Punjab'), [0])
+        self.assertEqual(self.match.team_net_run_rate(d, 'Chennai Super Kings'), [0])
+
+    def test_get_team_features(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        output = self.match.get_team_features(Match.team_win_rate, matches)
+        self.assertEqual(output, [1.0, 0.0, 1])
+        output = self.match2.get_team_features(Match.team_win_rate, matches)
+        self.assertEqual(output, [1.0, 0.0, 1])
 
 if __name__ == '__main__':
     unittest.main()
