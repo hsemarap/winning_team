@@ -167,31 +167,27 @@ class Match:
     def team_strike_rates(self, stats_dict, team):
         """Strike rates for all players in team using stats_dict.
         """
-        strike_rates = [batsman_overall_strike_rate(stats_dict, player) for player in team]
-        strike_rates = list(islice(chain(strike_rates, repeat(default_strike_rate)), 11))
-        return strike_rates
+        return self.team_stats_for_feature(stats_dict, team, batsman_overall_strike_rate, default_strike_rate)
 
     def team_averages(self, stats_dict, team):
         """Averages for all players in team using stats_dict.
         """
-        averages = [batsman_average(stats_dict, player) for player in team]
-        averages = list(islice(chain(averages, repeat(default_average)), 11))
-        return averages
+        return self.team_stats_for_feature(stats_dict, team, batsman_average, default_average)
 
     def team_bowling_economies(self, stats_dict, team):
         """Bowling economies for all players in team using stats_dict.
         """
-        economies = [bowler_economy(stats_dict, player) for player in team]
-        economies = list(islice(chain(economies, repeat(default_bowling_economy)), 11))
-        return economies
+        return self.team_stats_for_feature(stats_dict, team, bowler_economy, default_bowling_economy)
 
-    # TODO: Refactor.
     def team_bowling_strike_rates(self, stats_dict, team):
-        """Bowling strike rates for all players in team using stats_dict.
-        """
-        strike_rates = [bowler_strike_rate(stats_dict, player) for player in team]
-        strike_rates = list(islice(chain(strike_rates, repeat(default_bowling_strike_rate)), 11))
-        return strike_rates
+        """Bowling strike rates for all players in team using stats_dict."""
+        return self.team_stats_for_feature(stats_dict, team, bowler_strike_rate, default_bowling_strike_rate)
+
+    def team_stats_for_feature(self, stats_dict, team, stat_fn, default_value):
+        """Get stat for all players in team."""
+        features = [stat_fn(stats_dict, player) for player in team]
+        features = list(islice(chain(features, repeat(default_value)), 11))
+        return features
 
     def get_features(self, features_fn, past_matches):
         """Return features usable as a training data point.

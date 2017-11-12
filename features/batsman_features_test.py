@@ -49,6 +49,7 @@ class TestBatsmenFeatures(unittest.TestCase):
     def assertAlmostEqualLists(self, outputList, expectedList):
         """Assert that the given lists are element-wise almost equal."""
         self.assertEqual(len(outputList), len(expectedList))
+        print(outputList, expectedList)
         for o, e in zip(outputList, expectedList):
             self.assertAlmostEqual(o, e)
 
@@ -182,6 +183,65 @@ class TestBatsmenFeatures(unittest.TestCase):
         d = get_player_stats_dict(matches)
         self.assertEqual(bowler_economy(d, 'JDP Oram'), 10.0)
         self.assertEqual(bowler_economy(d, 'Foo'), default_bowling_economy)
+
+    def test_team_strike_rates(self):
+        matches = [self.match]
+        d = get_player_stats_dict(matches)
+        team1 = self.match.get_first_batting_side_players()
+        team2 = self.match.get_second_batting_side_players()
+        x = default_strike_rate
+        expected = [x] * 11
+        expected[0] = 0.0
+        expected[1] = 23 * 100 / 14
+        self.assertAlmostEqualLists(self.match.team_strike_rates(d, team1),
+                                    expected)
+        # No wickets taken.
+        expected = [x] * 11
+        expected[0] = 100 * 2 / 3
+        expected[1] = 100 * 1 / 10
+        expected[2] = 100 * 1 / 5
+        expected[3] = 100 * 1 / 1
+        self.assertAlmostEqualLists(self.match.team_strike_rates(d, team2),
+                                    expected)
+
+    def test_team_averages(self):
+        matches = [self.match]
+        d = get_player_stats_dict(matches)
+        team1 = self.match.get_first_batting_side_players()
+        team2 = self.match.get_second_batting_side_players()
+        x = default_average
+        expected = [x] * 11
+        expected[0] = 0.0
+        expected[1] = 23.0
+        self.assertAlmostEqualLists(self.match.team_averages(d, team1),
+                                    expected)
+        # No wickets taken.
+        expected = [x] * 11
+        expected[0] = 2
+        expected[1] = 1
+        expected[2] = 1
+        expected[3] = 1
+        self.assertAlmostEqualLists(self.match.team_averages(d, team2),
+                                    expected)
+
+    def test_team_bowling_economies(self):
+        matches = [self.match]
+        d = get_player_stats_dict(matches)
+        team1 = self.match.get_first_batting_side_players()
+        team2 = self.match.get_second_batting_side_players()
+        x = default_bowling_economy
+        expected = [x] * 11
+        expected[2] = 3.0
+        expected[3] = 5.0
+        self.assertAlmostEqualLists(self.match.team_bowling_economies(d, team1),
+                                    expected)
+        # No wickets taken.
+        expected = [x] * 11
+        expected[4] = 4.5
+        expected[5] = 18.0
+        self.assertAlmostEqualLists(self.match.team_bowling_economies(d, team2),
+                                    expected)
+
     def test_bowler_strike_rate(self):
         matches = [self.match, self.match2]
         d = get_player_stats_dict(matches)
