@@ -128,6 +128,10 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(self.match.first_batting_side(),
                          'Kolkata Knight Riders')
 
+    def test_second_batting_side(self):
+        self.assertEqual(self.match.second_batting_side(),
+                         'Royal Challengers Bangalore')
+
     def test_first_batting_side_won(self):
         self.assertEqual(self.match.first_batting_side_won(), True)
 
@@ -277,6 +281,16 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(self.match.team_win_rate(d, 'Royal Challengers Bangalore'), 0)
         self.assertEqual(self.match.team_win_rate(d, 'Kings XI Punjab'), 0)
         self.assertEqual(self.match.team_win_rate(d, 'Chennai Super Kings'), 1)
+
+    def test_team_net_run_rate(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        x = default_net_run_rate
+        self.assertEqual(self.match.team_net_run_rate(d, 'Foo'), default_net_run_rate)
+        self.assertEqual(self.match.team_net_run_rate(d, 'Kolkata Knight Riders'), 27/3 - 11/3)
+        self.assertEqual(self.match.team_net_run_rate(d, 'Royal Challengers Bangalore'), 11/3 - 27/3)
+        self.assertEqual(self.match.team_net_run_rate(d, 'Kings XI Punjab'), 0)
+        self.assertEqual(self.match.team_net_run_rate(d, 'Chennai Super Kings'), 0)
 
 if __name__ == '__main__':
     unittest.main()

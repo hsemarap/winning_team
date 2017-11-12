@@ -10,6 +10,7 @@ default_average = 10
 default_bowling_economy = 9.0
 default_bowling_strike_rate = 60.0
 default_win_rate = 50.0
+default_net_run_rate = 0.0
 
 average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
 strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
@@ -36,21 +37,37 @@ def get_player_stats_dict(matches):
                                       'batsman matches played': 0,
                                       'bowler matches played': 0,
                                       'bowler balls': 0,
-                                      'total runs given': 0,
-                                      'total wickets': 0,
+                                      'bowler total runs given': 0,
+                                      'bowler total wickets': 0,
                                       'wins': 0,
                                       'matches': 0,
+                                      'team total runs made': 0,
+                                      'team total runs given': 0,
+                                      'team total balls batted': 0,
+                                      'team total balls bowled': 0,
                                       })
     for match in matches:
         details = match.match_details
-        team1 = details['info']['teams'][0]
-        team2 = details['info']['teams'][1]
+        team1 = match.first_batting_side()
+        team2 = match.second_batting_side()
         stats_dict[team1]['matches'] += 1
         stats_dict[team2]['matches'] += 1
         if details['info']['outcome']['winner'] == team1:
             stats_dict[team1]['wins'] += 1
         elif details['info']['outcome']['winner'] == team2:
             stats_dict[team2]['wins'] += 1
+
+        for ix, ball in match.first_innings_balls():
+            stats_dict[team1]['team total runs made'] += ball['runs']['total']
+            stats_dict[team2]['team total runs given'] += ball['runs']['total']
+            stats_dict[team1]['team total balls batted'] += 1
+            stats_dict[team2]['team total balls bowled'] += 1
+
+        for ix, ball in match.second_innings_balls():
+            stats_dict[team2]['team total runs made'] += ball['runs']['total']
+            stats_dict[team1]['team total runs given'] += ball['runs']['total']
+            stats_dict[team2]['team total balls batted'] += 1
+            stats_dict[team1]['team total balls bowled'] += 1
 
         match_batsmen = {}
         match_bowlers = {}
@@ -62,11 +79,11 @@ def get_player_stats_dict(matches):
 
             bowler = ball['bowler']
             match_bowlers[bowler] = True
-            stats_dict[bowler]['total runs given'] += ball['runs']['total']
+            stats_dict[bowler]['bowler total runs given'] += ball['runs']['total']
             stats_dict[bowler]['bowler balls'] += 1
 
             if 'wicket' in ball and ball['wicket']['kind'] in bowler_dismissals:
-                stats_dict[bowler]['total wickets'] += 1
+                stats_dict[bowler]['bowler total wickets'] += 1
 
         for batsman in match_batsmen:
             stats_dict[batsman]['batsman matches played'] += 1
@@ -163,6 +180,11 @@ class Match:
             rest.remove(toss['winner'])
             return rest[0]
 
+    def second_batting_side(self):
+        rest = self.match_details['info']['teams'][:]
+        rest.remove(self.first_batting_side())
+        return rest[0]
+
     def first_batting_side_won(self):
         return self.winner() == self.first_batting_side()
 
@@ -204,13 +226,24 @@ class Match:
         return features
 
     def team_win_rate(self, stats_dict, team):
-        """Get stat for team."""
+        """Get win rate for team."""
         num_wins = stats_dict[team]['wins']
         num_matches = stats_dict[team]['matches']
         if num_matches == 0:
             return default_win_rate
         else:
             return num_wins / num_matches
+
+    def team_net_run_rate(self, stats_dict, team):
+        """Get net run rate for team."""
+        total_runs_made = stats_dict[team]['team total runs made']
+        total_overs_batted = stats_dict[team]['team total balls batted'] // 6
+        total_runs_given = stats_dict[team]['team total runs given']
+        total_overs_bowled = stats_dict[team]['team total balls bowled'] // 6
+        if total_overs_bowled == 0 or total_overs_batted == 0:
+            return default_net_run_rate
+        else:
+            return (total_runs_made / total_overs_batted) - (total_runs_given / total_overs_bowled)
 
     def get_features(self, features_fn, past_matches):
         """Return features usable as a training data point.
@@ -288,10 +321,10 @@ def bowler_num_overs(stats_dict, player):
     return bowler_num_balls(stats_dict, player) // 6
 
 def bowler_total_runs_given(stats_dict, player):
-    return stats_dict[player]['total runs given']
+    return stats_dict[player]['bowler total runs given']
 
 def bowler_total_wickets(stats_dict, player):
-    return stats_dict[player]['total wickets']
+    return stats_dict[player]['bowler total wickets']
 
 def batsman_overall_strike_rate(stats_dict, player):
     balls = batsman_num_balls_over_matches(stats_dict, player)
