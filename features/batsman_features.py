@@ -13,6 +13,7 @@ default_bowling_strike_rate = 60.0
 average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
 strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
 bowling_economy_features_fn = lambda x, xs: x.get_features(Match.team_bowling_economies, xs)
+bowling_strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_bowling_strike_rates, xs)
 
 bowler_dismissals = ['caught', 'bowled', 'lbw', 'stumped', 'caught and bowled']
 
