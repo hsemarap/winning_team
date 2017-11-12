@@ -9,6 +9,7 @@ default_strike_rate = 100
 default_average = 10
 default_bowling_economy = 9.0
 default_bowling_strike_rate = 60.0
+default_win_rate = 50.0
 
 average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
 strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
@@ -37,8 +38,20 @@ def get_player_stats_dict(matches):
                                       'bowler balls': 0,
                                       'total runs given': 0,
                                       'total wickets': 0,
+                                      'wins': 0,
+                                      'matches': 0,
                                       })
     for match in matches:
+        details = match.match_details
+        team1 = details['info']['teams'][0]
+        team2 = details['info']['teams'][1]
+        stats_dict[team1]['matches'] += 1
+        stats_dict[team2]['matches'] += 1
+        if details['info']['outcome']['winner'] == team1:
+            stats_dict[team1]['wins'] += 1
+        elif details['info']['outcome']['winner'] == team2:
+            stats_dict[team2]['wins'] += 1
+
         match_batsmen = {}
         match_bowlers = {}
         for ix, ball in match.balls():
@@ -189,6 +202,15 @@ class Match:
         features = [stat_fn(stats_dict, player) for player in team]
         features = list(islice(chain(features, repeat(default_value)), 11))
         return features
+
+    def team_win_rate(self, stats_dict, team):
+        """Get stat for team."""
+        num_wins = stats_dict[team]['wins']
+        num_matches = stats_dict[team]['matches']
+        if num_matches == 0:
+            return default_win_rate
+        else:
+            return num_wins / num_matches
 
     def get_features(self, features_fn, past_matches):
         """Return features usable as a training data point.

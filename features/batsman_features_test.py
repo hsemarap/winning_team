@@ -49,7 +49,7 @@ class TestBatsmenFeatures(unittest.TestCase):
     def assertAlmostEqualLists(self, outputList, expectedList):
         """Assert that the given lists are element-wise almost equal."""
         self.assertEqual(len(outputList), len(expectedList))
-        print(outputList, expectedList)
+        # print(outputList, expectedList)
         for o, e in zip(outputList, expectedList):
             self.assertAlmostEqual(o, e)
 
@@ -265,6 +265,18 @@ class TestBatsmenFeatures(unittest.TestCase):
         expected = [x] * 11
         self.assertAlmostEqualLists(self.match.team_bowling_strike_rates(d, team2),
                                     expected)
+
+    def test_team_win_rate(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        team1 = self.match.get_first_batting_side_players()
+        team2 = self.match.get_second_batting_side_players()
+        x = default_win_rate
+        self.assertEqual(self.match.team_win_rate(d, 'Foo'), default_win_rate)
+        self.assertEqual(self.match.team_win_rate(d, 'Kolkata Knight Riders'), 1)
+        self.assertEqual(self.match.team_win_rate(d, 'Royal Challengers Bangalore'), 0)
+        self.assertEqual(self.match.team_win_rate(d, 'Kings XI Punjab'), 0)
+        self.assertEqual(self.match.team_win_rate(d, 'Chennai Super Kings'), 1)
 
 if __name__ == '__main__':
     unittest.main()
