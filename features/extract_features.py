@@ -162,6 +162,8 @@ def generate_stats_for(target):
         generate_and_write_season_matrices(5, 10, average_features_fn, 'extracted-stats/season%d-alone-average.mat')
     elif target == 'bowling economy 2-10':
         generate_and_write_season_matrices(2, 10, bowling_economy_features_fn, 'extracted-stats/season%d-alone-bowling-economy.mat')
+    elif target == 'bowling strike rate 2-10':
+        generate_and_write_season_matrices(2, 10, bowling_strike_rate_features_fn, 'extracted-stats/season%d-alone-bowling-strike-rate.mat')
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
@@ -169,5 +171,5 @@ if __name__ == '__main__':
     # test_parse_yaml()
 
     # test_reading_files()
-    target = 'bowling economy 2-10'
+    target = 'bowling strike rate 2-10'
     generate_stats_for(target)
