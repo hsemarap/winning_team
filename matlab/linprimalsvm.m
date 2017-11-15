@@ -5,8 +5,11 @@
 % Output: vector theta of d rows, 1 column
 function [theta status] = linprimalsvm(X,y)
 [n, d] = size(X);
-H = eye(d);
-f = zeros(d, 1);
+X = [X ones(n, 1)]; %add offset feature as 1
+d = d + 1;
+slack = zeros(n, 1);
+H = eye(d+n);
+f = zeros(d+n, 1);
 A = zeros(n, d);
 b = ones(n, 1) * -1;
 for i = 1:n
@@ -14,6 +17,8 @@ for i = 1:n
         A(i, j) = -y(i) * X(i, j);
     end
 end
-options = optimset('Display','on');
+A = [A -eye(n)];
+options = optimset('Display','off');
 %theta = quadprog(H, f, A, b); status=0;
 [theta Fval status] = quadprog(H,f,A,b, [], [], [], [], [], options);
+theta = theta(1:d);

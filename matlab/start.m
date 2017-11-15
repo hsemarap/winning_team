@@ -5,7 +5,7 @@ function accuracy = start(traincv_perc, k, F, n, d)
     cumulative = true;
     per_season = false;
     feature_types = ["-alone-rolling-stats.mat", "-alone-average.mat", "-alone-bowling-economy.mat"];
-    %feature_types = ["-alone-average.mat"];
+    feature_types = ["-alone-average.mat"];
     %feature_types = ["-alone-rolling-stats.mat"];
     %feature_types = ["-alone-bowling-economy.mat"];
 if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
@@ -15,8 +15,6 @@ if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
             fprintf("Per season statistics\n")
         end
         Xfinal = []; yfinal = [];
-        %load("../extracted-stats/season2-alone-rolling-stats.mat");
-        %Xfinal = X; yfinal = y;
         for i=season_start:season_end                      
             if ~cumulative                
                 Xfinal = []; yfinal = [];
@@ -49,6 +47,7 @@ if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
             y = yfinal;        
             y = double(y)';  
             [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs);
+            prim_acc_str = num2str(prim_acc);
             if prim_acc == -1
                 prim_acc_str = "Infeasible";
             end
@@ -58,9 +57,13 @@ if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
         X = [1:2:n; [1:2:n] + rand(1, n/2)/4]';
         y = X(:, 1) > n/2;
         y = y * -2 + 1;        
-        
+
+        %adding outlier
+        %X = [X; 8.0000    8.1773];    y=[y; 1.0000]
+        X = [n/2-2  n/2-2; n/2-3  n/2-3; X];
+        y = [-1; -1; y]
         %comment this to try out previous sample data
-        [X y] = createsepdata(n, d);
+        %[X y] = createsepdata(n, d);
         [X y]
         [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs);
         prim_acc_str = num2str(prim_acc);
@@ -113,13 +116,14 @@ end
     if logs == true
         fprintf('Running Dual SVM with K=%d fold crossvalidation\n', k);
     end
-    [C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs);
     
-    %C_opt = 1000; gamma_opt = .01;
+    %[C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs);
+    
+    C_opt = 1000; gamma_opt = .01; accuracy_opt = 0;
     accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs);
     dual_acc = accuracy;
     if logs == true
-        [C_opt gamma_opt accuracy_opt]
+        %[C_opt gamma_opt accuracy_opt]
         fprintf('Dual SVM Accuracy: %f\n', accuracy);
     end
  end    
