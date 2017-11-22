@@ -8,7 +8,7 @@ iter = 1;
 for C=C_range
   for K_gamma=gamma_range
     if logs == true
-        disp([num2str(iter), '/', num2str(count), ' - Trying C: ', num2str(C), ', gamma:', num2str(K_gamma)]);
+        fprintf("%d/%d - Trying C: %.4f, gamma: %.4f", iter, count, C, K_gamma);
     end
     iter = iter + 1;
     accuracy = kfoldcv(k, X, y, C, K_gamma, @testdualsvm);
@@ -18,6 +18,9 @@ for C=C_range
       gamma_opt = K_gamma;
       accuracy_opt = result(3);
       maxAccuracy = result(3);
+    end
+    if logs == true
+        fprintf(" accuracy: %.4f\n", result(3));
     end
     results = [results; result];
   end
