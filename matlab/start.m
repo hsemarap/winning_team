@@ -1,12 +1,12 @@
 function accuracy = start(traincv_perc, k, F, n, d)   
     logs = true;
     season_start = 2;
-    season_end   = 10;
+    season_end   = 2;
     cumulative = true;
     per_season = false;
     feature_types = ["-alone-rolling-stats.mat", "-alone-average.mat", "-alone-bowling-economy.mat"];
-    feature_types = ["-alone-average.mat"];
-    %feature_types = ["-alone-rolling-stats.mat"];
+    %feature_types = ["-alone-average.mat"];
+    feature_types = ["-alone-rolling-stats.mat"];
     %feature_types = ["-alone-bowling-economy.mat"];
 if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
         if cumulative
@@ -46,6 +46,16 @@ if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
             X = Xfinal;
             y = yfinal;        
             y = double(y)';  
+
+%             s = 1; e = size(X, 1); 
+%             fs = 1; fe = 22;
+%             X = X(s:e, fs:fe);
+%             y = y(s:e);
+%                         
+%             y = y * 2 - 1;
+%             X
+%             y
+            
             [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs);
             prim_acc_str = num2str(prim_acc);
             if prim_acc == -1
@@ -75,6 +85,7 @@ if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
 end
 
  function [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs)
+    y = ((y==0) * -1) + y
     [n d] = size(X);
     %ordering = randperm(n);
     %X = X(ordering, :);
@@ -94,7 +105,7 @@ end
         [S ~] = greedysubset(F, X, y);
         if logs
             disp('Selecting features')
-            S
+            sort(S)
         end
     else
         S =  1:d;
@@ -117,7 +128,7 @@ end
         fprintf('Running Dual SVM with K=%d fold crossvalidation\n', k);
     end
     
-    %[C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs);
+    %[C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs)
     
     C_opt = 1000; gamma_opt = .01; accuracy_opt = 0;
     accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs);
