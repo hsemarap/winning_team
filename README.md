@@ -97,3 +97,10 @@ For example, a batsman's average after 10 matches will be total runs scored in t
 Compute stats for a player including international T20 matches up to that date.
 
 Maybe include player stats from ODI and Test matches too.
+
+
+# To Do (PD)
+
+Shuffle the input data before splitting train/testa
+
+Add a function to generate the report for all combinations
