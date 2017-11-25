@@ -1,13 +1,14 @@
 function accuracy = start(traincv_perc, k, F, n, d)   
     logs = true;
-    season_start = 2;
-    season_end   = 2;
+    season_start = 3;
+    season_end   = 3;
     cumulative = true;
     per_season = false;
     feature_types = ["-alone-rolling-stats.mat", "-alone-average.mat", "-alone-bowling-economy.mat"];
     %feature_types = ["-alone-average.mat"];
-    feature_types = ["-alone-rolling-stats.mat"];
+    %feature_types = ["-alone-rolling-stats.mat"];
     %feature_types = ["-alone-bowling-economy.mat"];
+    feature_types = ["-alone-rolling-stats.mat", "-alone-average.mat"];
 if (~exist('n','var') || isempty(n)) || (~exist('d','var') || isempty(d))
         if cumulative
             fprintf("Season Cumulative statistics\n")
@@ -86,10 +87,11 @@ end
 
  function [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs)
     y = ((y==0) * -1) + y
-    [n d] = size(X);
-    %ordering = randperm(n);
-    %X = X(ordering, :);
-    %y = y(ordering, :);
+    [n d] = size(X);    
+    s = RandStream('mcg16807','Seed',0)
+    shuffle_order = randperm(s, n);
+    X = X(shuffle_order, :);
+    y = y(shuffle_order, :);
     ntraincv = floor(n * traincv_perc);
     ntest = n - ntraincv;
 
@@ -128,9 +130,9 @@ end
         fprintf('Running Dual SVM with K=%d fold crossvalidation\n', k);
     end
     
-    %[C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs)
+    [C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs)
     
-    C_opt = 1000; gamma_opt = .01; accuracy_opt = 0;
+    %C_opt = 1000; gamma_opt = .01; accuracy_opt = 0;
     accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs);
     dual_acc = accuracy;
     if logs == true
