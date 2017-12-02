@@ -12,7 +12,7 @@ function accuracy = sampledata(traincv_perc, k, F, n, d)
     %comment this to try out previous sample data
     %[X y] = createsepdata(n, d);
     [X y]
-    [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs);
+    [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs);
     prim_acc_str = num2str(prim_acc);
     if prim_acc == -1
         prim_acc_str = "Infeasible";

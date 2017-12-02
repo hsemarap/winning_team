@@ -43,7 +43,7 @@ function accuracy = start(traincv_perc, k, F, logs, season_start, season_end, cu
             end
             X = Xfinal;
             y = double(yfinal)';
-            [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs);
+            [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs);
             if prim_acc == -1
                 prim_acc_str = "Infeasible";
             end
@@ -68,7 +68,7 @@ function accuracy = start(traincv_perc, k, F, logs, season_start, season_end, cu
 %             X
 %             y
 
-        [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs);
+        [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs);
         prim_acc_str = num2str(prim_acc);
         if prim_acc == -1
             prim_acc_str = "Infeasible";

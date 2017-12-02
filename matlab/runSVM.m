@@ -1,4 +1,4 @@
- function [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs)
+ function [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs)
     y = ((y==0) * -1) + y;
     [n d] = size(X);    
     [X y] = shuffledata(X, y);
