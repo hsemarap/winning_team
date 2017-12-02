@@ -9,6 +9,7 @@ default_strike_rate = 100
 default_average = 10
 default_bowling_economy = 9.0
 default_bowling_strike_rate = 60.0
+default_bowling_average = 60.0
 default_win_rate = 50.0
 default_net_run_rate = 0.0
 default_average_plus_strike_rate = default_average + default_strike_rate
@@ -389,3 +390,11 @@ def bowler_strike_rate(stats_dict, player):
         return default_bowling_strike_rate
     else:
         return num_balls / num_wickets
+
+def bowler_average(stats_dict, player):
+    num_wickets = bowler_total_wickets(stats_dict, player)
+    num_runs = bowler_total_runs_given(stats_dict, player)
+    if num_wickets == 0:
+        return default_bowling_average
+    else:
+        return num_runs / num_wickets

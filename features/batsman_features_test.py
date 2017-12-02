@@ -188,12 +188,6 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(batsman_average_plus_strike_rate(d, 'Foo'), default_average_plus_strike_rate)
         self.assertEqual(batsman_average_plus_strike_rate(d, 'BB McCullum'), 23 + 100 * 23/14)
 
-    def test_bowler_economy(self):
-        matches = [self.match, self.match2]
-        d = get_player_stats_dict(matches)
-        self.assertEqual(bowler_economy(d, 'JDP Oram'), 10.0)
-        self.assertEqual(bowler_economy(d, 'Foo'), default_bowling_economy)
-
     def test_team_strike_rates(self):
         matches = [self.match]
         d = get_player_stats_dict(matches)
@@ -252,6 +246,28 @@ class TestBatsmenFeatures(unittest.TestCase):
         expected[3] = 1 + 100 * 1 / 1
         self.assertAlmostEqualLists(self.match.team_batting_average_plus_strike_rate(d, team2),
                                     expected)
+
+    def test_bowler_economy(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(bowler_economy(d, 'JDP Oram'), 10.0)
+        self.assertEqual(bowler_economy(d, 'Foo'), default_bowling_economy)
+
+    def test_bowler_average(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        pprint(d)
+        self.assertEqual(bowler_average(d, 'JDP Oram'), default_bowling_average)
+        self.assertEqual(bowler_average(d, 'AB Dinda'), 6.0)
+        self.assertEqual(bowler_average(d, 'Foo'), default_bowling_average)
+
+    def test_bowler_strike_rate(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(bowler_strike_rate(d, 'Foo'), default_bowling_strike_rate)
+        self.assertEqual(bowler_strike_rate(d, 'I Sharma'), 6.0)
+        self.assertEqual(bowler_strike_rate(d, 'AB Dinda'), 13.0)
+        self.assertEqual(bowler_strike_rate(d, 'B Lee'), 13.0)
 
     def test_team_bowling_economies(self):
         matches = [self.match]
