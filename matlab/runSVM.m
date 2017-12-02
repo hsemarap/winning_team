@@ -23,7 +23,7 @@
     if logs == true
         disp('Running Primal SVM')
     end
-    accuracy = testprimsvm(Xtraincv, ytraincv, Xtest, ytest, logs);
+    accuracy = getaccuracy(testprimsvm(Xtraincv, ytraincv, Xtest, ytest, logs), ytest);
     prim_acc = accuracy;
     if logs == true && accuracy ~= -1
         fprintf('Primal SVM Accuracy: %f\n', accuracy);
@@ -37,7 +37,7 @@
     [C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs);
     
     %C_opt = 1000; gamma_opt = .01; accuracy_opt = 0;
-    accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs);
+    accuracy = getaccuracy(testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs), ytest);    
     dual_acc = accuracy;
     if logs == true
         %[C_opt gamma_opt accuracy_opt]

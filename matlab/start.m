@@ -44,7 +44,8 @@ function accuracy = start(traincv_perc, k, F, logs, season_start, season_end, cu
             X = Xfinal;
             y = double(yfinal)';
             [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs);
-            [logistic_acc] = logisticregression(X, y, traincv_perc);
+            [log_ypred, log_ytest] = logisticregression(X, y, traincv_perc);
+            logistic_acc = getaccuracy(log_ypred, log_ytest);
             if prim_acc == -1
                 prim_acc_str = "Infeasible";
             end
@@ -71,8 +72,10 @@ function accuracy = start(traincv_perc, k, F, logs, season_start, season_end, cu
 
         prim_acc = 0;
         dual_acc = 0;
-        %[prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs);
-        [logistic_acc] = logisticregression(X, y, traincv_perc);
+        logistic_acc = 0;
+        [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs);
+        [log_ypred, log_ytest] = logisticregression(X, y, traincv_perc);
+        logistic_acc = getaccuracy(log_ypred, log_ytest);
         prim_acc_str = num2str(prim_acc);
         if prim_acc == -1
             prim_acc_str = "Infeasible";

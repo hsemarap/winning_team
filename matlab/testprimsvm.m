@@ -1,4 +1,4 @@
-function accuracy = testprimsvm(Xtraincv, ytraincv, X, y, logs)
+function ypred = testprimsvm(Xtraincv, ytraincv, X, y, logs)
     [theta status] = linprimalsvm(Xtraincv,ytraincv);
     if status == -2
         if logs == true
@@ -10,9 +10,8 @@ function accuracy = testprimsvm(Xtraincv, ytraincv, X, y, logs)
     
     accuracy = 0;
     [total ~] = size(X);
+    ypred = ones(total, 1);
     for i=1:total
-        pred = linpred(theta, X(i,:)');
-        accuracy = accuracy + (pred == y(i));
+        ypred(i) = linpred(theta, X(i,:)');
     end
-    accuracy = accuracy / total;
     

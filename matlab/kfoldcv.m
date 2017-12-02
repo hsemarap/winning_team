@@ -14,7 +14,7 @@ for i=1:k
     ytrain = y(S);
     Xtest = X(T, :);
     ytest = y(T);
-    z(i) = costFunc(Xtrain, ytrain, Xtest, ytest, C, K_gamma);
+    z(i) = getaccuracy(costFunc(Xtrain, ytrain, Xtest, ytest, C, K_gamma), ytest);
 end
 end
     
