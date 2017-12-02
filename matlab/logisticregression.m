@@ -3,7 +3,7 @@
 %        vector y of labels, with n rows (samples), 1 column
 %            y(i) is the label (+1 or -1) of the i-th sample
 % Output: vector theta of d rows, 1 column
-function [ypred, ytest] = logisticregression(X, y, traincv_perc)
+function [ypred, ytest, yconf] = logisticregression(X, y, traincv_perc)
     [n d] = size(X);    
 
     X = [ones(n, 1) X]; %add offset feature as 1
@@ -17,13 +17,14 @@ function [ypred, ytest] = logisticregression(X, y, traincv_perc)
     options = optimoptions('fminunc', 'GradObj', 'on', 'Display','off', 'MaxIter', 1000);
 
     lambda = 300;
-    [theta, cost] = fminunc(@(t)(logisticcost(t, Xtrain, ytrain, lambda)), theta, options);
+    [theta, ~] = fminunc(@(t)(logisticcost(t, Xtrain, ytrain, lambda)), theta, options);
     
-    ypred = logisticprediction(theta, Xtest);
+    yconf = logisticprediction(theta, Xtest);
+    ypred = round(yconf);
 end
 
-function predy = logisticprediction(theta, X)
-    predy = round(sigmoid(X * theta));
+function yconf = logisticprediction(theta, X)
+    yconf = sigmoid(X * theta);
 end
 
 function [J, grad] = logisticcost(theta, X, y, lambda)

@@ -4,8 +4,12 @@ function report()
     k = 5;
     start_season = 2; end_season = 10;
     logs = false;
-    all_features = ["-alone-rolling-stats.mat", "-alone-average.mat", "-alone-bowling-economy.mat"];
-    report_list = [4,5];
+    all_features = ["-alone-rolling-stats.mat", ...
+                    "-alone-average.mat", ...
+                    "-alone-bowling-economy.mat", ...
+                    "-alone-bowling-strike-rate.mat", ...
+                    "-alone-team-win-rate.mat"];
+    report_list = [3];
     
     rep_no = 1;    
     if ismember(rep_no, report_list)

@@ -1,4 +1,4 @@
- function [prim_acc, dual_acc] = runSVM(X, y, traincv_perc, k, F, logs)
+ function [ytest, prim_ypred, prim_yconf, dual_ypred, dual_yconf] = runSVM(X, y, traincv_perc, k, F, logs)
     y = ((y==0) * -1) + y;
     [n d] = size(X);    
     [X y] = shuffledata(X, y);
@@ -23,12 +23,7 @@
     if logs == true
         disp('Running Primal SVM')
     end
-    accuracy = getaccuracy(testprimsvm(Xtraincv, ytraincv, Xtest, ytest, logs), ytest);
-    prim_acc = accuracy;
-    if logs == true && accuracy ~= -1
-        fprintf('Primal SVM Accuracy: %f\n', accuracy);
-    end
-    %accuracy = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, 10, 1/2);
+    [prim_ypred, ~, prim_yconf] = testprimsvm(Xtraincv, ytraincv, Xtest, ytest, logs);
     
     if logs == true
         fprintf('Running Dual SVM with K=%d fold crossvalidation\n', k);
@@ -37,10 +32,5 @@
     [C_opt gamma_opt accuracy_opt] = crossvalidation(k, Xtraincv, ytraincv, logs);
     
     %C_opt = 1000; gamma_opt = .01; accuracy_opt = 0;
-    accuracy = getaccuracy(testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs), ytest);    
-    dual_acc = accuracy;
-    if logs == true
-        %[C_opt gamma_opt accuracy_opt]
-        fprintf('Dual SVM Accuracy: %f\n', accuracy);
-    end
+    [dual_ypred, ~, dual_yconf] = testdualsvm(Xtraincv, ytraincv, Xtest, ytest, C_opt, gamma_opt, logs);
  end    
