@@ -98,10 +98,10 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(batsman_num_balls(self.match, 'R Dravid'), 3)
         self.assertEqual(batsman_num_balls(self.match, 'BB McCullum'), 14)
 
-    def test_batsman_strike_rate(self):
-        self.assertAlmostEqual(batsman_strike_rate(self.match, 'R Dravid'), 100 * 2/3)
-        self.assertAlmostEqual(batsman_strike_rate(self.match, 'BB McCullum'), 100 * 23/14)
-        self.assertAlmostEqual(batsman_strike_rate(self.match, 'Foo'), default_strike_rate)
+    # def test_batsman_strike_rate(self):
+    #     self.assertAlmostEqual(batsman_strike_rate(self.match, 'R Dravid'), 100 * 2/3)
+    #     self.assertAlmostEqual(batsman_strike_rate(self.match, 'BB McCullum'), 100 * 23/14)
+    #     self.assertAlmostEqual(batsman_strike_rate(self.match, 'Foo'), default_strike_rate)
 
     def test_overall_strike_rate(self):
         self.assertAlmostEqual(batsman_overall_strike_rate(
@@ -182,6 +182,12 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(batsman_average(d, 'BB McCullum'), 23)
         self.assertEqual(batsman_average(d, 'Foo'), default_average)
 
+    def test_batsman_average_plus_strike_rate(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(batsman_average_plus_strike_rate(d, 'Foo'), default_average_plus_strike_rate)
+        self.assertEqual(batsman_average_plus_strike_rate(d, 'BB McCullum'), 23 + 100 * 23/14)
+
     def test_bowler_economy(self):
         matches = [self.match, self.match2]
         d = get_player_stats_dict(matches)
@@ -226,6 +232,25 @@ class TestBatsmenFeatures(unittest.TestCase):
         expected[2] = 1
         expected[3] = 1
         self.assertAlmostEqualLists(self.match.team_averages(d, team2),
+                                    expected)
+
+    def test_team_average_plus_strike_rate(self):
+        matches = [self.match]
+        d = get_player_stats_dict(matches)
+        team1 = self.match.get_first_batting_side_players()
+        team2 = self.match.get_second_batting_side_players()
+        x = default_average_plus_strike_rate
+        expected = [x] * 11
+        expected[0] = 0.0
+        expected[1] = 23 + 100 * 23/14
+        self.assertAlmostEqualLists(self.match.team_batting_average_plus_strike_rate(d, team1),
+                                    expected)
+        expected = [x] * 11
+        expected[0] = 2 + 100 * 2 / 3
+        expected[1] = 1 + 100 * 1 / 10
+        expected[2] = 1 + 100 * 1 / 5
+        expected[3] = 1 + 100 * 1 / 1
+        self.assertAlmostEqualLists(self.match.team_batting_average_plus_strike_rate(d, team2),
                                     expected)
 
     def test_team_bowling_economies(self):

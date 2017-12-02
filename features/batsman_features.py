@@ -11,6 +11,7 @@ default_bowling_economy = 9.0
 default_bowling_strike_rate = 60.0
 default_win_rate = 50.0
 default_net_run_rate = 0.0
+default_average_plus_strike_rate = default_average + default_strike_rate
 
 average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
 strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
@@ -18,6 +19,7 @@ bowling_economy_features_fn = lambda x, xs: x.get_features(Match.team_bowling_ec
 bowling_strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_bowling_strike_rates, xs)
 team_win_rate_features_fn = lambda x, xs: x.get_team_features(Match.team_win_rate, xs)
 team_net_run_rate_features_fn = lambda x, xs: x.get_team_features(Match.team_net_run_rate, xs)
+batting_average_plus_strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_batting_average_plus_strike_rate, xs)
 
 bowler_dismissals = ['caught', 'bowled', 'lbw', 'stumped', 'caught and bowled']
 
@@ -215,6 +217,11 @@ class Match:
         """
         return self.team_stats_for_feature(stats_dict, team, batsman_average, default_average)
 
+    def team_batting_average_plus_strike_rate(self, stats_dict, team):
+        """Average + strike rate for all players in team using stats_dict.
+        """
+        return self.team_stats_for_feature(stats_dict, team, batsman_average_plus_strike_rate, default_average_plus_strike_rate)
+
     def team_bowling_economies(self, stats_dict, team):
         """Bowling economies for all players in team using stats_dict.
         """
@@ -319,13 +326,13 @@ def batsman_num_balls(match, player):
             total += 1
     return total
 
-def batsman_strike_rate(match, player):
-    total = batsman_total(match, player)
-    balls = batsman_num_balls(match, player)
-    if balls == 0:
-        return default_strike_rate
-    else:
-        return 100 * total / balls
+# def batsman_strike_rate(match, player):
+#     total = batsman_total(match, player)
+#     balls = batsman_num_balls(match, player)
+#     if balls == 0:
+#         return default_strike_rate
+#     else:
+#         return 100 * total / balls
 
 def batsman_total_over_matches(stats_dict, player):
     return stats_dict[player]['total runs']
@@ -364,6 +371,9 @@ def batsman_average(stats_dict, player):
         return default_average
     else:
         return batsman_total_over_matches(stats_dict, player) / num_matches
+
+def batsman_average_plus_strike_rate(stats_dict, player):
+    return batsman_average(stats_dict, player) + batsman_overall_strike_rate(stats_dict, player)
 
 def bowler_economy(stats_dict, player):
     num_overs = bowler_num_overs(stats_dict, player)
