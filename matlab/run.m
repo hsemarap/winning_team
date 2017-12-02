@@ -1,17 +1,8 @@
  function [prim_acc, dual_acc] = run(X, y, traincv_perc, k, F, logs)
     y = ((y==0) * -1) + y;
     [n d] = size(X);    
-    s = RandStream('mcg16807','Seed',0);
-    shuffle_order = randperm(s, n);
-    X = X(shuffle_order, :);
-    y = y(shuffle_order, :);
-    ntraincv = floor(n * traincv_perc);
-    ntest = n - ntraincv;
-
-    Xtraincv = X(1:ntraincv, :);
-    ytraincv = y(1:ntraincv);
-    Xtest = X(ntraincv+1:n, :);
-    ytest = y(ntraincv+1:n);
+    [X y] = shuffledata(X, y);
+    [Xtraincv ytraincv Xtest ytest] = splitdata(X, y, traincv_perc);
     
     if F < d
         if logs
