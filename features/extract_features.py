@@ -174,7 +174,7 @@ def generate_stats_for(targets):
         elif target == 'batting average + strike rate 2-10':
             generate_and_write_season_matrices(2, 10, all_season_matches,
                                                batting_average_plus_strike_rate_features_fn,
-                                               'extracted-stats/season%d-alone-batting-average-plus_strike-rate.mat')
+                                               'extracted-stats/season%d-alone-batting-average-plus-strike-rate.mat')
         elif target == 'bowling economy 2-10':
             generate_and_write_season_matrices(2, 10, all_season_matches,
                                                bowling_economy_features_fn,
@@ -183,6 +183,10 @@ def generate_stats_for(targets):
             generate_and_write_season_matrices(2, 10, all_season_matches,
                                                bowling_strike_rate_features_fn,
                                                'extracted-stats/season%d-alone-bowling-strike-rate.mat')
+        elif target == 'bowling average + strike rate + economy 2-10':
+            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               bowling_average_plus_strike_rate_plus_economy_features_fn,
+                                               'extracted-stats/season%d-alone-bowling-average-plus-strike-rate-plus-economy.mat')
         elif target == 'team win rate 2-10':
             generate_and_write_season_matrices(2, 10, all_season_matches,
                                                team_win_rate_features_fn,
@@ -205,5 +209,7 @@ if __name__ == '__main__':
         # 'bowling strike rate 2-10',
         # 'team win rate 2-10',
         # 'team net run rate 2-10',
+         'batting average + strike rate 2-10',
+         'bowling average + strike rate + economy 2-10'
                ]
-    # generate_stats_for(targets)
+    generate_stats_for(targets)
