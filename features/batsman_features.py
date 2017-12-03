@@ -22,6 +22,7 @@ bowling_strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_bowlin
 team_win_rate_features_fn = lambda x, xs: x.get_team_features(Match.team_win_rate, xs)
 team_net_run_rate_features_fn = lambda x, xs: x.get_team_features(Match.team_net_run_rate, xs)
 batting_average_plus_strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_batting_average_plus_strike_rate, xs)
+bowling_average_plus_strike_rate_plus_economy_features_fn = lambda x, xs: x.get_features(Match.team_bowling_average_plus_strike_rate_plus_economy, xs)
 
 bowler_dismissals = ['caught', 'bowled', 'lbw', 'stumped', 'caught and bowled']
 
@@ -223,6 +224,11 @@ class Match:
         """Average + strike rate for all players in team using stats_dict.
         """
         return self.team_stats_for_feature(stats_dict, team, batsman_average_plus_strike_rate, default_average_plus_strike_rate)
+
+    def team_bowling_average_plus_strike_rate_plus_economy(self, stats_dict, team):
+        """Average + strike rate + economy for all players in team using stats_dict.
+        """
+        return self.team_stats_for_feature(stats_dict, team, bowler_average_plus_strike_rate_plus_economy, default_bowling_average_plus_strike_rate_plus_economy)
 
     def team_bowling_economies(self, stats_dict, team):
         """Bowling economies for all players in team using stats_dict.

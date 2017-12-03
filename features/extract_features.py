@@ -55,7 +55,7 @@ def test_reading_files():
     for i, match in enumerate(matches):
         print(batsman_total(match, 'BB McCullum'))
         print(batsman_num_balls(match, 'BB McCullum'))
-        print(batsman_strike_rate(match, 'BB McCullum'))
+        # print(batsman_strike_rate(match, 'BB McCullum'))
 
 def rolling_stats(xs, fn, initial_past = []):
     """Get value of fn for each element with previous elements as additional input.
@@ -203,7 +203,7 @@ if __name__ == '__main__':
         # 'averages 2-10',
         # 'bowling economy 2-10',
         # 'bowling strike rate 2-10',
-        'team win rate 2-10',
-        'team net run rate 2-10',
+        # 'team win rate 2-10',
+        # 'team net run rate 2-10',
                ]
-    generate_stats_for(targets)
+    # generate_stats_for(targets)

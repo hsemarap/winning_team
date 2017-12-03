@@ -297,13 +297,22 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertAlmostEqualLists(self.match.team_bowling_economies(d, team2),
                                     expected)
 
-    def test_bowler_strike_rate(self):
-        matches = [self.match, self.match2]
+    def test_team_bowling_average_plus_strike_rate_plus_economy(self):
+        matches = [self.match]
         d = get_player_stats_dict(matches)
-        self.assertEqual(bowler_strike_rate(d, 'Foo'), default_bowling_strike_rate)
-        self.assertEqual(bowler_strike_rate(d, 'I Sharma'), 6.0)
-        self.assertEqual(bowler_strike_rate(d, 'AB Dinda'), 13.0)
-        self.assertEqual(bowler_strike_rate(d, 'B Lee'), 13.0)
+        team1 = self.match.get_first_batting_side_players()
+        team2 = self.match.get_second_batting_side_players()
+        x = default_bowling_average_plus_strike_rate_plus_economy
+        expected = [x] * 11
+        expected[2] = 6.0 + 3.0 + 13
+        expected[3] = 5.0 + 6.0 + 5.0
+        self.assertAlmostEqualLists(self.match.team_bowling_average_plus_strike_rate_plus_economy(d, team1),
+                                    expected)
+        expected = [x] * 11
+        expected[4] = default_bowling_average + default_bowling_strike_rate + 4.5
+        expected[5] = default_bowling_average + default_bowling_strike_rate + 18
+        self.assertAlmostEqualLists(self.match.team_bowling_average_plus_strike_rate_plus_economy(d, team2),
+                                    expected)
 
     def test_team_bowling_strike_rates(self):
         matches = [self.match]
