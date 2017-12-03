@@ -269,6 +269,16 @@ class TestBatsmenFeatures(unittest.TestCase):
         self.assertEqual(bowler_strike_rate(d, 'AB Dinda'), 13.0)
         self.assertEqual(bowler_strike_rate(d, 'B Lee'), 13.0)
 
+    def test_bowler_average_plus_strike_rate_plus_economy(self):
+        matches = [self.match, self.match2]
+        d = get_player_stats_dict(matches)
+        self.assertEqual(bowler_average_plus_strike_rate_plus_economy(d, 'Foo'),
+                         default_bowling_average_plus_strike_rate_plus_economy)
+        self.assertEqual(bowler_average_plus_strike_rate_plus_economy(d, 'JDP Oram'), 10.0 + default_bowling_average + default_bowling_strike_rate)
+        self.assertEqual(bowler_average_plus_strike_rate_plus_economy(d, 'I Sharma'), 5.0 + 6.0 + 5.0)
+        self.assertEqual(bowler_average_plus_strike_rate_plus_economy(d, 'AB Dinda'), 6.0 + 13.0 + 3.0)
+        self.assertEqual(bowler_average_plus_strike_rate_plus_economy(d, 'B Lee'), 12.0 + 13.0 + 6.0)
+
     def test_team_bowling_economies(self):
         matches = [self.match]
         d = get_player_stats_dict(matches)

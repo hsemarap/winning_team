@@ -13,6 +13,7 @@ default_bowling_average = 60.0
 default_win_rate = 50.0
 default_net_run_rate = 0.0
 default_average_plus_strike_rate = default_average + default_strike_rate
+default_bowling_average_plus_strike_rate_plus_economy = default_bowling_average + default_bowling_strike_rate + default_bowling_economy
 
 average_features_fn = lambda x, xs: x.get_features(Match.team_averages, xs)
 strike_rate_features_fn = lambda x, xs: x.get_features(Match.team_strike_rates, xs)
@@ -398,3 +399,6 @@ def bowler_average(stats_dict, player):
         return default_bowling_average
     else:
         return num_runs / num_wickets
+
+def bowler_average_plus_strike_rate_plus_economy(stats_dict, player):
+    return bowler_average(stats_dict, player) + bowler_strike_rate(stats_dict, player) + bowler_economy(stats_dict, player)
