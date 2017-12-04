@@ -9,13 +9,23 @@
             if logs
                 disp('Running Greedy Subset Selection')    
             end
-            [S ~] = greedysubset(F, X, y);
+            [S ~] = greedysubset(F, X, y);            
+        else if feat_selector == "forwardfitting"
             if logs
-                disp('Selecting features')
-                sort(S)
+                disp('Running Forward fitting')    
             end
-        else    
+            [S ~] = forwardfitting(F, X, y);
+        else if feat_selector == "myopic"
+            if logs
+                disp('Running Myopic Forwad fitting')    
+            end
+            [S ~] = myopicfitting(F, X, y);
+        else
             S = 1:d;
+        end
+        if logs
+            disp('Selecting features')
+            sort(S)
         end
     else
         S =  1:d;
