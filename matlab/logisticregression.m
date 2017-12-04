@@ -7,7 +7,7 @@ function [ypred, ytest, yconf] = logisticregression(X, y, traincv_perc)
     [n d] = size(X);    
 
     X = [ones(n, 1) X]; %add offset feature as 1
-    y = (y + 1)/2; %convert -1,+1 to 0,+1
+    y = (y == 1); %convert -1,+1 to 0,+1
     [X y] = shuffledata(X, y);
     [Xtrain ytrain Xtest ytest] = splitdata(X, y, traincv_perc);
     
