@@ -1,35 +1,10 @@
- function [ytest, ypred, yconf] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs)
+ function [ytest, ypred, yconf, S] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs)
     y = ((y==0) * -1) + y;
     [n d] = size(X);    
     [X y] = shuffledata(X, y);
     [Xtraincv ytraincv Xtest ytest] = splitdata(X, y, traincv_perc);
     
-    if F < d
-        if feat_selector == "greedy"
-            if logs
-                disp('Running Greedy Subset Selection')    
-            end
-            [S ~] = greedysubset(F, X, y);            
-        else if feat_selector == "forwardfitting"
-            if logs
-                disp('Running Forward fitting')    
-            end
-            [S ~] = forwardfitting(F, X, y);
-        else if feat_selector == "myopic"
-            if logs
-                disp('Running Myopic Forwad fitting')    
-            end
-            [S ~] = myopicfitting(F, X, y);
-        else
-            S = 1:d;
-        end
-        if logs
-            disp('Selecting features')
-            sort(S)
-        end
-    else
-        S =  1:d;
-    end
+    S = featureselection(feat_selector, F, X, y, logs);
     
     Xtraincv = Xtraincv(:, S);
     Xtest = Xtest(:, S);

@@ -1,5 +1,5 @@
 % Test Script for running with custom options and data
-function [ytest, ypred, yconf, accuracy] = start(traincv_perc, classifier, feat_selector, k, F, logs, season_start, season_end, cumulative, per_season, features)       
+function [ytest, ypred, yconf, accuracy, feat_subset] = start(traincv_perc, classifier, feat_selector, k, F, logs, season_start, season_end, cumulative, per_season, features)       
     if (~exist('features','var'))
         logs = true;
         season_start = 3;
@@ -42,7 +42,7 @@ function [ytest, ypred, yconf, accuracy] = start(traincv_perc, classifier, feat_
             end
             X = Xfinal;
             y = double(yfinal)';
-            [ytest, prim_ypred, prim_yconf, dual_ypred, dual_yconf] = runSVM(X, y, traincv_perc, classifier, k, F, logs);
+            [ytest, prim_ypred, prim_yconf, dual_ypred, dual_yconf, feat_subset] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs);
             if classifier == "primalsvm"
                 accuracy = getaccuracy(prim_ypred, ytest);
                 yconf = prim_yconf;
@@ -56,7 +56,7 @@ function [ytest, ypred, yconf, accuracy] = start(traincv_perc, classifier, feat_
             end
             
             if classifier == "logistic"
-                [log_ypred, log_ytest, log_yconf] = logisticregression(X, y, traincv_perc);
+                [log_ypred, log_ytest, log_yconf, feat_subset] = logisticregression(X, y, traincv_perc, feat_selector, F, logs);
                 log_acc = getaccuracy(log_ypred, log_ytest);
                 accuracy = log_acc;
                 ypred = log_ypred;
@@ -91,14 +91,14 @@ function [ytest, ypred, yconf, accuracy] = start(traincv_perc, classifier, feat_
         dual_acc = 0;
         log_acc = 0;                
         if classifier == "logistic"
-            [log_ypred, log_ytest, log_yconf] = logisticregression(X, y, traincv_perc);
+            [log_ypred, log_ytest, log_yconf, feat_subset] = logisticregression(X, y, traincv_perc, feat_selector, F, logs);
             log_acc = getaccuracy(log_ypred, log_ytest);
             accuracy = log_acc;
             ypred = log_ypred;
             ytest = log_ytest;
             yconf = log_yconf;
         else 
-            [ytest, ypred, yconf] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs);
+            [ytest, ypred, yconf, feat_subset] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs);
             accuracy = getaccuracy(ypred, ytest);
         end
         
