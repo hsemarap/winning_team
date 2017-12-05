@@ -97,25 +97,38 @@ def write_all_feature_matrices(matrices, file_name_template, starting_season):
         write_feature_matrix(matrix, file_name_template % start_index)
         start_index += 1
 
-def get_all_season_matches():
+def get_all_season_matches(league):
     """Return matches for all seasons."""
-    season1_dir = './raw-data/ipl/season-1-2008'
-    season2_dir = './raw-data/ipl/season-2-2009'
-    season3_dir = './raw-data/ipl/season-3-2010'
-    season4_dir = './raw-data/ipl/season-4-2011'
-    season5_dir = './raw-data/ipl/season-5-2012'
-    season6_dir = './raw-data/ipl/season-6-2013'
-    season7_dir = './raw-data/ipl/season-7-2014'
-    season8_dir = './raw-data/ipl/season-8-2015'
-    season9_dir = './raw-data/ipl/season-9-2016'
-    season10_dir = './raw-data/ipl/season-10-2017'
+    season1_dir = './raw-data/{}/season-1-2008'.format(league)
+    season2_dir = './raw-data/{}/season-2-2009'.format(league)
+    season3_dir = './raw-data/{}/season-3-2010'.format(league)
+    season4_dir = './raw-data/{}/season-4-2011'.format(league)
+    season5_dir = './raw-data/{}/season-5-2012'.format(league)
+    season6_dir = './raw-data/{}/season-6-2013'.format(league)
+    season7_dir = './raw-data/{}/season-7-2014'.format(league)
+    season8_dir = './raw-data/{}/season-8-2015'.format(league)
+    season9_dir = './raw-data/{}/season-9-2016'.format(league)
+    season10_dir = './raw-data/{}/season-10-2017'.format(league)
 
-    all_seasons = [season1_dir, season2_dir, season3_dir, season4_dir,
-                   season5_dir, season6_dir, season7_dir, season8_dir,
-                   season9_dir, season10_dir]
-    # num_files = 1
+    season_dir = './raw-data/{}/'.format(league)
+
+    # num_files = 20
     num_files = None
-    all_season_matches = [get_matches(f, num_files) for f in all_seasons]
+    if league == 'ipl':
+        all_seasons = [season1_dir, season2_dir, season3_dir, season4_dir,
+                       season5_dir, season6_dir, season7_dir, season8_dir,
+                       season9_dir, season10_dir]
+        all_season_matches = [get_matches(f, num_files) for f in all_seasons]
+    else:
+        all_matches = get_matches(season_dir, num_files)
+        # Percentage of initial matches that we will use to calculate stats
+        # for later matches but not for training or testing.
+        perc_ignored_initial_matches = 10/100
+        total_matches = len(all_matches)
+        num_ignored_initial_matches = int(perc_ignored_initial_matches * total_matches)
+        num_ignored_initial_matches = num_ignored_initial_matches if num_ignored_initial_matches > 10 else 10
+        all_season_matches = [all_matches[:num_ignored_initial_matches],
+                              all_matches[num_ignored_initial_matches:]]
     return all_season_matches
 
 def get_current_and_past_season_matches(all_season_matches, starting_season = 2, ending_season = 4):
@@ -151,50 +164,58 @@ def generate_and_write_season_matrices(starting_season, ending_season, all_seaso
         past_season_matches)
     write_all_feature_matrices(matrices, file_name_template, starting_season)
 
-def generate_stats_for(targets):
+def generate_stats_for(targets, league = 'ipl'):
     """Generic function to get different datasets based on target."""
-    all_season_matches = get_all_season_matches()
+    all_season_matches = get_all_season_matches(league)
+    if league == 'ipl':
+        stats_dir = 'extracted-stats/'
+        starting_season = 2
+        ending_season = 10
+    else:
+        stats_dir = 'extracted-stats/' + league + '/'
+        starting_season = 2
+        ending_season = 2
     for target in targets:
         if target == 'strike rates alone':
             generate_and_write_season_matrices(2, 4, all_season_matches,
                                                strike_rate_features_fn,
-                                               'extracted-stats/season%d-alone-rolling-stats.mat')
+                                               stats_dir + 'season%d-alone-rolling-stats.mat')
         elif target == 'averages 2-4':
             generate_and_write_season_matrices(2, 4, all_season_matches,
                                                average_features_fn,
-                                               'extracted-stats/season%d-alone-average.mat')
-        if target == 'strike rates 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-average.mat')
+        if target == 'strike rates all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                strike_rate_features_fn,
-                                               'extracted-stats/season%d-alone-strike-rate.mat')
-        elif target == 'averages 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-strike-rate.mat')
+        elif target == 'averages all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                average_features_fn,
-                                               'extracted-stats/season%d-alone-average.mat')
-        elif target == 'batting average + strike rate 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-average.mat')
+        elif target == 'batting average + strike rate all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                batting_average_plus_strike_rate_features_fn,
-                                               'extracted-stats/season%d-alone-batting-average-plus-strike-rate.mat')
-        elif target == 'bowling economy 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-batting-average-plus-strike-rate.mat')
+        elif target == 'bowling economy all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                bowling_economy_features_fn,
-                                               'extracted-stats/season%d-alone-bowling-economy.mat')
-        elif target == 'bowling strike rate 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-bowling-economy.mat')
+        elif target == 'bowling strike rate all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                bowling_strike_rate_features_fn,
-                                               'extracted-stats/season%d-alone-bowling-strike-rate.mat')
-        elif target == 'bowling average + strike rate + economy 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-bowling-strike-rate.mat')
+        elif target == 'bowling average + strike rate + economy all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                bowling_average_plus_strike_rate_plus_economy_features_fn,
-                                               'extracted-stats/season%d-alone-bowling-average-plus-strike-rate-plus-economy.mat')
-        elif target == 'team win rate 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-bowling-average-plus-strike-rate-plus-economy.mat')
+        elif target == 'team win rate all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                team_win_rate_features_fn,
-                                               'extracted-stats/season%d-alone-team-win-rate.mat')
-        elif target == 'team net run rate 2-10':
-            generate_and_write_season_matrices(2, 10, all_season_matches,
+                                               stats_dir + 'season%d-alone-team-win-rate.mat')
+        elif target == 'team net run rate all seasons':
+            generate_and_write_season_matrices(starting_season, ending_season, all_season_matches,
                                                team_net_run_rate_features_fn,
-                                               'extracted-stats/season%d-alone-team-net-run-rate.mat')
+                                               stats_dir + 'season%d-alone-team-net-run-rate.mat')
 
 if __name__ == '__main__':
     print('Winning Team: ML on IPL\n')
@@ -203,13 +224,14 @@ if __name__ == '__main__':
 
     # test_reading_files()
     targets = [
-        # 'strike rates 2-10',
-        # 'averages 2-10',
-        # 'bowling economy 2-10',
-        # 'bowling strike rate 2-10',
-        # 'team win rate 2-10',
-        # 'team net run rate 2-10',
-         'batting average + strike rate 2-10',
-         'bowling average + strike rate + economy 2-10'
+        'strike rates all seasons',
+        'averages all seasons',
+        'bowling economy all seasons',
+        'bowling strike rate all seasons',
+        'team win rate all seasons',
+        'team net run rate all seasons',
+         'batting average + strike rate all seasons',
+         'bowling average + strike rate + economy all seasons'
                ]
-    generate_stats_for(targets)
+    # generate_stats_for(targets)
+    generate_stats_for(targets, 'bbl')
