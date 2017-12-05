@@ -3,7 +3,7 @@
 %        vector y of labels, with n rows (samples), 1 column
 %            y(i) is the label (+1 or -1) of the i-th sample
 % Output: vector theta of d rows, 1 column
-function [ypred, ytest, yconf, S] = logisticregression(X, y, traincv_perc, feat_selector, F, logs)
+function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, S] = logisticregression(X, y, traincv_perc, feat_selector, F, logs)
     [n d] = size(X);    
 
     X = [ones(n, 1) X]; %add offset feature as 1

@@ -35,9 +35,10 @@ function report()
                         "L1_norm"
                      ];
     configurations = [
-        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["greedy"], [22], "batting_avg_strike"},
-        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["forwardfitting"], [22], "batting_avg_strike"},
-        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["myopic"], [22], "batting_avg_strike"},
+        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm"], ["greedy"], [22], "batting_avg_strike"},
+        %{["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["greedy"], [22], "batting_avg_strike"},
+        %{["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["forwardfitting"], [22], "batting_avg_strike"},
+        %{["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["myopic"], [22], "batting_avg_strike"},
         %{["-alone-batting-average-plus-strike-rate.mat"], 2, 10, true, false, [0.7], ["primalsvm", "dualsvm"], ["greedy"], [22, 10, 5], "batting_combo"}
         %{["-alone-bowling-average-plus-strike-rate-plus-economy.mat"], 2, 10, true, false, [0.7], ["primalsvm", "dualsvm"], ["greedy"], [22, 10, 5], "bowling_combo"}
     ];
@@ -54,8 +55,12 @@ function report()
         subset_sizes = config{9};
         filename = config{10};
         count = 0;
-        combinations = size(train_percents, 1) * size(classifiers, 1) * size(feat_selectors, 1) * size(subset_sizes, 1); 
+        combinations = size(train_percents, 2) * size(classifiers, 2) * size(feat_selectors, 2) * size(subset_sizes, 2); 
         %[features_list, season_start, season_end, cumulative, per_season, train_percents, classifiers, feat_selectors, subset_sizes] = config;
+        plot_acc_num_samp = and(combinations > 1, combinations == size(train_percents, 2));
+        inst_acc_num_samp_file = sprintf('../plots/%s_%s_%d_acc_num_samp.jpg', classifiers(1), feat_selectors(1), subset_sizes(1));
+        accuracies = [];
+        numsamples = [];
         for train_percent=train_percents
             for classifier=classifiers
                 for feat_selector=feat_selectors
@@ -66,7 +71,9 @@ function report()
                         inst_filename = sprintf("%s_%.2f_%s_%s_%d", filename, train_percent, classifier, feat_selector, subset_size);
                         inst_prec_rec_file = sprintf('../plots/%s_prec_rec.jpg', inst_filename);                        
                         inst_stat_file = sprintf('../stats/%s_stat.txt', inst_filename);
-                        [ytest, ~, yconf, accuracy, feat_subset] = start(train_percent, classifier, feat_selector, k, subset_size, logs, season_start, season_end, cumulative, per_season, features);
+                        [Xtrain, Xtest, ytrain, ytest, ~, yconf, accuracy, feat_subset] = start(train_percent, classifier, feat_selector, k, subset_size, logs, season_start, season_end, cumulative, per_season, features);
+                        numsamples = [numsamples; size(Xtrain, 1)];
+                        accuracies = [accuracies; accuracy];
                         fileID = fopen(inst_stat_file,'w');
                         feat_subset_str = sprintf('%.0f,', feat_subset);
                         feat_subset_str = feat_subset_str(1:end-1);
@@ -77,6 +84,9 @@ function report()
                     end
                 end
             end
+        end
+        if plot_acc_num_samp
+            plotaccuracynumsamples(accuracies, numsamples, inst_acc_num_samp_file);
         end
     end   
 end 

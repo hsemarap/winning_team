@@ -1,4 +1,4 @@
- function [ytest, ypred, yconf, S] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs)
+ function [Xtraincv, Xtest, ytraincv, ytest, ypred, yconf, S] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs)
     y = ((y==0) * -1) + y;
     [n d] = size(X);    
     [X y] = shuffledata(X, y);
