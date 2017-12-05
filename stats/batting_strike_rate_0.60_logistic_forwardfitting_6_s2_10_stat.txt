@@ -1,0 +1,1 @@
+0.670996	0.60	logistic	forwardfitting	6	feat-{6,7,12,18,20,23}

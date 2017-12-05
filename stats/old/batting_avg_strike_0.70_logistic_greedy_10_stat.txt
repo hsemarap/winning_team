@@ -1,0 +1,1 @@
+0.670520	0.70	logistic	greedy	10
