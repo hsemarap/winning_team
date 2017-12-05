@@ -19,11 +19,4 @@ function [precision, recall] = plotprecisionrecall(yconf, ytest, start_r, end_r,
     %[recall, sort_order]= sort(recall);
     %precision = precision(sort_order);
     %[recall, precision];
-    figure1 = figure('Visible','off');
-    plot(recall, precision);    
-    title('Precision vs Recall');
-    xlabel('Recall');
-    ylabel('Precision');
-    if (exist('filename','var'))
-        saveas(figure1, filename);
-    end
+    plot_and_save(false, recall, precision, 'Recall', 'Precision', 'Precision vs Recall', filename)
