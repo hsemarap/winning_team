@@ -1,0 +1,1 @@
+0.866667	0.80	logistic	forwardfitting	10	feat-{12,16,26,30,33,43,49,68,70,89}

@@ -1,0 +1,1 @@
+0.777778	0.70	primalsvm	forwardfitting	10	feat-{20,22,28,33,42,44,75,76,85,87}

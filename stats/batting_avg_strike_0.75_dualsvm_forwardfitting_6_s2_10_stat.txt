@@ -1,0 +1,1 @@
+0.729167	0.75	dualsvm	forwardfitting	6	feat-{7,18,19,20,22,44}
