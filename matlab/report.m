@@ -35,7 +35,11 @@ function report()
                         "L1_norm"
                      ];
     configurations = [
-        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7, 0.5], ["logistic"], ["greedy"], [22, 10, 5], "batting_avg_strike"}
+        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["greedy"], [22], "batting_avg_strike"},
+        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["forwardfitting"], [22], "batting_avg_strike"},
+        {["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [0.7], ["primalsvm"], ["myopic"], [22], "batting_avg_strike"},
+        %{["-alone-batting-average-plus-strike-rate.mat"], 2, 10, true, false, [0.7], ["primalsvm", "dualsvm"], ["greedy"], [22, 10, 5], "batting_combo"}
+        %{["-alone-bowling-average-plus-strike-rate-plus-economy.mat"], 2, 10, true, false, [0.7], ["primalsvm", "dualsvm"], ["greedy"], [22, 10, 5], "bowling_combo"}
     ];
     for i=1:size(configurations, 1)
         config = configurations(i, :);
@@ -49,21 +53,27 @@ function report()
         feat_selectors = config{8};
         subset_sizes = config{9};
         filename = config{10};
+        count = 0;
+        combinations = size(train_percents, 1) * size(classifiers, 1) * size(feat_selectors, 1) * size(subset_sizes, 1); 
         %[features_list, season_start, season_end, cumulative, per_season, train_percents, classifiers, feat_selectors, subset_sizes] = config;
         for train_percent=train_percents
             for classifier=classifiers
                 for feat_selector=feat_selectors
                     for subset_size=subset_sizes
+                        count = count + 1;
+                        fprintf("Config %d/%d) combination %d/%d - %.2f percent data, %s, %s-%d, season:%d-%d\n", i, size(configurations, 1), count, combinations, train_percent, classifier, feat_selector, subset_size, season_start, season_end);
                         %[train_percent, classifier, feat_selector, k, subset_size, logs, season_start, season_end, cumulative, per_season, features]
                         inst_filename = sprintf("%s_%.2f_%s_%s_%d", filename, train_percent, classifier, feat_selector, subset_size);
                         inst_prec_rec_file = sprintf('../plots/%s_prec_rec.jpg', inst_filename);                        
                         inst_stat_file = sprintf('../stats/%s_stat.txt', inst_filename);
-                        [ytest, ~, yconf, accuracy] = start(train_percent, classifier, feat_selector, k, subset_size, logs, season_start, season_end, cumulative, per_season, features);
+                        [ytest, ~, yconf, accuracy, feat_subset] = start(train_percent, classifier, feat_selector, k, subset_size, logs, season_start, season_end, cumulative, per_season, features);
                         fileID = fopen(inst_stat_file,'w');
-                        fprintf(fileID,'%f\t%.2f\t%s\t%s\t%d\n', accuracy, train_percent, classifier, feat_selector, subset_size);
+                        feat_subset_str = sprintf('%.0f,', feat_subset);
+                        feat_subset_str = feat_subset_str(1:end-1);
+                        fprintf(fileID,'%f\t%.2f\t%s\t%s\t%d\tfeat-{%s}\n', accuracy, train_percent, classifier, feat_selector, subset_size, feat_subset_str);
                         fclose(fileID);                        
                         start_r = 0; end_r = 1; count = 4;                            
-                        plotprecisionrecall(yconf, ytest, start_r, end_r, count, inst_prec_rec_file);
+                        plotprecisionrecall(yconf, ytest, start_r, end_r, count, inst_prec_rec_file);                        
                     end
                 end
             end
