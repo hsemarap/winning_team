@@ -48,6 +48,7 @@ function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, accuracy, feat_subset, the
             
             if classifier == "logistic"
                 [Xtrain, Xtest, ytrain, ytest, ypred, yconf, feat_subset] = logisticregression(X, y, traincv_perc, feat_selector, F, logs);
+                theta_alpha = [];
             end
             
             if classifier == "ensemble"
@@ -69,6 +70,7 @@ function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, accuracy, feat_subset, the
         log_acc = 0;                
         if classifier == "logistic"
             [Xtrain, Xtest, ytrain, ytest, ypred, yconf, feat_subset] = logisticregression(X, y, traincv_perc, feat_selector, F, logs);
+            theta_alpha = [];
         elseif classifier == "ensemble"
                 [Xtrain, Xtest, ytrain, ytest, ypred, yconf, feat_subset, theta_alpha] = ensemble(X, y, traincv_perc, feat_selector, k, F, logs);
         else 
