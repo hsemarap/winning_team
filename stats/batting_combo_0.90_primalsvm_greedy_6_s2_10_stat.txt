@@ -1,1 +1,1 @@
-0.551724	0.90	primalsvm	greedy	6	feat-{5,11,13,17,19,22}
+0.551724	0.90	primalsvm	greedy	6	feat-{5,11,13,17,19,22}	s2_10	batting_combo

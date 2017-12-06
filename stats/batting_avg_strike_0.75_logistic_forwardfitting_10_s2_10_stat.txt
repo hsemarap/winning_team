@@ -1,1 +1,1 @@
-0.645833	0.75	logistic	forwardfitting	10	feat-{8,14,17,19,20,21,23,28,34,45}
+0.645833	0.75	logistic	forwardfitting	10	feat-{8,14,17,19,20,21,23,28,34,45}	s2_10	batting_avg_strike

@@ -1,1 +1,1 @@
-0.543103	0.80	primalsvm	greedy	2	feat-{1,2}
+0.543103	0.80	primalsvm	greedy	2	feat-{1,2}	s2_10	team_win

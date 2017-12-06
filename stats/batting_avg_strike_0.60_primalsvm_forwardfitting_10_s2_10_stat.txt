@@ -1,1 +1,1 @@
-0.679654	0.60	primalsvm	forwardfitting	10	feat-{7,9,11,13,16,18,19,20,22,44}
+0.679654	0.60	primalsvm	forwardfitting	10	feat-{7,9,11,13,16,18,19,20,22,44}	s2_10	batting_avg_strike

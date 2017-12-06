@@ -1,1 +1,1 @@
-0.763889	0.75	logistic	greedy	6	feat-{4,10,12,17,20,23}
+0.763889	0.75	logistic	greedy	6	feat-{4,10,12,17,20,23}	s2_10	bowling_combo

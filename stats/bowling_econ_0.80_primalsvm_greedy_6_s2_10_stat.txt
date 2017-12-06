@@ -1,1 +1,1 @@
-0.612069	0.80	primalsvm	greedy	6	feat-{1,2,15,16,21,22}
+0.612069	0.80	primalsvm	greedy	6	feat-{1,2,15,16,21,22}	s2_10	bowling_econ

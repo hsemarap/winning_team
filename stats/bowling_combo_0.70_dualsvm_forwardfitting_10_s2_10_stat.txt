@@ -1,1 +1,1 @@
-0.653179	0.70	dualsvm	forwardfitting	10	feat-{7,8,9,11,15,16,17,19,21,22}
+0.653179	0.70	dualsvm	forwardfitting	10	feat-{7,8,9,11,15,16,17,19,21,22}	s2_10	bowling_combo

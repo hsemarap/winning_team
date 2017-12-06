@@ -1,1 +1,1 @@
-0.664740	0.70	logistic	greedy	14	feat-{3,4,5,6,7,8,12,13,14,16,18,20,22,23}
+0.664740	0.70	logistic	greedy	14	feat-{3,4,5,6,7,8,12,13,14,16,18,20,22,23}	s2_10	batting_strike_rate

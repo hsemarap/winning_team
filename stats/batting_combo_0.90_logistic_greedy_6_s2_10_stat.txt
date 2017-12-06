@@ -1,1 +1,1 @@
-0.586207	0.90	logistic	greedy	6	feat-{6,7,12,18,20,23}
+0.586207	0.90	logistic	greedy	6	feat-{6,7,12,18,20,23}	s2_10	batting_combo

@@ -1,1 +1,1 @@
-0.687500	0.75	dualsvm	greedy	6	feat-{7,13,16,19,20,22}
+0.687500	0.75	dualsvm	greedy	6	feat-{7,13,16,19,20,22}	s2_10	batting_avg

@@ -1,1 +1,1 @@
-0.699422	0.70	primalsvm	forwardfitting	10	feat-{6,7,11,13,15,17,18,19,21,22}
+0.699422	0.70	primalsvm	forwardfitting	10	feat-{6,7,11,13,15,17,18,19,21,22}	s2_10	batting_combo

@@ -1,1 +1,1 @@
-0.693642	0.70	primalsvm	greedy	6	feat-{7,16,19,20,22,44}
+0.693642	0.70	primalsvm	greedy	6	feat-{7,16,19,20,22,44}	s2_10	batting_avg_strike

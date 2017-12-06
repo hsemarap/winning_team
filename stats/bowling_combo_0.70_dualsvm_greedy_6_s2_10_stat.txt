@@ -1,1 +1,1 @@
-0.728324	0.70	dualsvm	greedy	6	feat-{2,9,11,16,19,22}
+0.728324	0.70	dualsvm	greedy	6	feat-{2,9,11,16,19,22}	s2_10	bowling_combo

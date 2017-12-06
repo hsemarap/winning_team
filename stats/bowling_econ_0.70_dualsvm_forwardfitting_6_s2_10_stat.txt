@@ -1,1 +1,1 @@
-0.682081	0.70	dualsvm	forwardfitting	6	feat-{1,9,16,18,21,22}
+0.682081	0.70	dualsvm	forwardfitting	6	feat-{1,9,16,18,21,22}	s2_10	bowling_econ

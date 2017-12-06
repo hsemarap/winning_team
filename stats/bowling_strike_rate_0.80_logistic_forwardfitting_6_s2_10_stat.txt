@@ -1,1 +1,1 @@
-0.715517	0.80	logistic	forwardfitting	6	feat-{10,12,17,20,21,23}
+0.715517	0.80	logistic	forwardfitting	6	feat-{10,12,17,20,21,23}	s2_10	bowling_strike_rate

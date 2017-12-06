@@ -1,1 +1,1 @@
-0.782609	0.70	primalsvm	forwardfitting	12	feat-{19,20,28,31,40,41,43,82,83,87,88,89}
+0.782609	0.70	primalsvm	forwardfitting	12	feat-{19,20,28,31,40,41,43,82,83,87,88,89}	s6_6	all_features

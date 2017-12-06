@@ -1,1 +1,1 @@
-0.687500	0.75	dualsvm	greedy	6	feat-{2,6,11,17,19,22}
+0.687500	0.75	dualsvm	greedy	6	feat-{2,6,11,17,19,22}	s2_10	batting_strike_rate

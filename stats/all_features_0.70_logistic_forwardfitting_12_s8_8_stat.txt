@@ -1,1 +1,1 @@
-0.611111	0.70	logistic	forwardfitting	12	feat-{13,26,45,56,57,59,60,66,68,70,77,89}
+0.611111	0.70	logistic	forwardfitting	12	feat-{13,26,45,56,57,59,60,66,68,70,77,89}	s8_8	all_features

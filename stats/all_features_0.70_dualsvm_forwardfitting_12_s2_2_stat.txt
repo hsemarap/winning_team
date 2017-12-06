@@ -1,1 +1,1 @@
-0.722222	0.70	dualsvm	forwardfitting	12	feat-{10,11,26,30,38,42,44,66,69,73,85,88}
+0.722222	0.70	dualsvm	forwardfitting	12	feat-{10,11,26,30,38,42,44,66,69,73,85,88}	s2_2	all_features

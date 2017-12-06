@@ -1,1 +1,1 @@
-0.500000	0.70	logistic	forwardfitting	12	feat-{8,17,23,38,48,54,67,68,75,81,84,89}
+0.500000	0.70	logistic	forwardfitting	12	feat-{8,17,23,38,48,54,67,68,75,81,84,89}	s10_10	all_features

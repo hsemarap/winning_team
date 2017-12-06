@@ -1,1 +1,1 @@
-0.462428	0.70	logistic	greedy	2	feat-{2,3}
+0.462428	0.70	logistic	greedy	2	feat-{2,3}	s2_10	team_win

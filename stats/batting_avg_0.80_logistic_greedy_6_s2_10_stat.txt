@@ -1,1 +1,1 @@
-0.637931	0.80	logistic	greedy	6	feat-{8,17,19,20,21,23}
+0.637931	0.80	logistic	greedy	6	feat-{8,17,19,20,21,23}	s2_10	batting_avg
