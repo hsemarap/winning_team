@@ -8,7 +8,10 @@ function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, S] = logisticregression(X,
 
     X = [ones(n, 1) X]; %add offset feature as 1
     y = (y == 1); %convert -1,+1 to 0,+1
-    [X y] = shuffledata(X, y);
+    if(traincv_perc ~= -1)
+        [X y] = shuffledata(X, y);
+        %Else No need to shuffle for league vs final, as ntest=4 (just finals)
+    end
     X = featurescaling(X);
     S = featureselection(feat_selector, F, X, y, logs);
     [Xtrain ytrain Xtest ytest] = splitdata(X, y, traincv_perc);

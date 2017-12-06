@@ -5,11 +5,10 @@ function report()
     start_season = 2; end_season = 10;
     logs = false;
     all_features =  [
-                        "-alone-batting-average-plus-strike-rate.mat", ...
-                        "-alone-bowling-average-plus-strike-rate-plus-economy.mat", ...
+                        "-alone-rolling-stats.mat", ...
+                        "-alone-average.mat", ...
                         "-alone-bowling-economy.mat", ...
                         "-alone-bowling-strike-rate.mat", ...
-                        "-alone-strike-rate.mat", ...
                         "-alone-team-net-run-rate.mat"...
                         "-alone-team-win-rate.mat"
                     ];    
@@ -37,7 +36,7 @@ function report()
                         "L1_norm"
                      ];
     configurations = [
-        %{"ipl", ["-alone-bowling-average-plus-strike-rate-plus-economy.mat"], 2, 10, true, false, [.7], ["ensemble"], ["greedy"], [22], "bowling_combo_C"},
+        {"ipl", all_features, 2, 10, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy", "forwardfitting"], [90, 68, 46, 24], "all_features"},
         %%Reports batting features all config
         %{"ipl", ["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [44, 30, 20, 10, 6], "batting_avg_strike"},
         %%Reports batting combo features all config
@@ -47,7 +46,7 @@ function report()
         
         %%All seasons all features        
         %{"ipl", all_features,2, 10, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46, 24], "all_features"},
-        {"t20s", all_features,2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46], "all_features"},
+        %{"t20s", all_features,2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46], "all_features"},
         
         %%Per season all features        
         %{"ipl", all_features, 2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [90, 68, 46, 24, 12], "all_features"},
@@ -144,7 +143,12 @@ function report()
                 for feat_selector=feat_selectors
                     for subset_size=subset_sizes
                         combination_idx = combination_idx + 1;
-                        fprintf("Config %d/%d) combination %d/%d - %s, %.2f percent data, %s, %s-%d, season:%d-%d\n", i, size(configurations, 1), combination_idx, combinations, league, train_percent, classifier, feat_selector, subset_size, season_start, season_end);
+                        if train_percent ~= -1
+                            percent_data = sprintf("%.2f_\%_data", train_percent);
+                        else
+                            percent_data = "LeagueVsFinal";
+                        end
+                        fprintf("Config %d/%d) combination %d/%d - %s, %s, %s, %s-%d, season:%d-%d\n", i, size(configurations, 1), combination_idx, combinations, league, percent_data, classifier, feat_selector, subset_size, season_start, season_end);
                         %[train_percent, classifier, feat_selector, k, subset_size, logs, season_start, season_end, cumulative, per_season, features]
                         inst_filename = sprintf("%s_%s_%.2f_%s_%s_%d_s%d_%d", league, filename, train_percent, classifier, feat_selector, subset_size, season_start, season_end);
                         inst_prec_rec_file = sprintf('../plots/%s_prec_rec.jpg', inst_filename);                        
@@ -155,7 +159,7 @@ function report()
                         fileID = fopen(inst_stat_file,'w');
                         feat_subset_str = sprintf('%.0f,', feat_subset);
                         feat_subset_str = feat_subset_str(1:end-1);
-                        fprintf(fileID,'%f\t%.2f\t%s\t%s\t%d\tfeat-{%s}\n', accuracy, train_percent, classifier, feat_selector, subset_size, feat_subset_str);
+                        fprintf(fileID,'%f\t%s\t%s\t%s\t%d\tfeat-{%s}\n', accuracy, train_percent, classifier, feat_selector, subset_size, feat_subset_str);
                         fclose(fileID);                        
                         start_r = 0; end_r = 1; count = 4;                            
                         plotprecisionrecall(yconf, ytest, start_r, end_r, count, inst_prec_rec_file);                        

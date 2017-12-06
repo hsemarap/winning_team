@@ -1,7 +1,10 @@
 function [Xtraincv, Xtest, ytraincv, ytest, ypred, yconf, S, theta_alpha] = ensemble(X, y, traincv_perc, feat_selector, k, F, logs)
     y = ((y==0) * -1) + y;
     [n d] = size(X);    
-    [X y] = shuffledata(X, y);
+    if(traincv_perc ~= -1)        
+        [X y] = shuffledata(X, y);
+        %Else No need to shuffle for league vs final, as ntest=4 (just finals)
+    end
     [Xtraincv ytraincv Xtest ytest] = splitdata(X, y, traincv_perc);
     
     X_ensemble = ones(n, d);

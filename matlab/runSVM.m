@@ -1,7 +1,10 @@
  function [Xtraincv, Xtest, ytraincv, ytest, ypred, yconf, S, theta_alpha] = runSVM(X, y, traincv_perc, classifier, feat_selector, k, F, logs)
     y = ((y==0) * -1) + y;
-    [n d] = size(X);    
-    [X y] = shuffledata(X, y);
+    [n d] = size(X);
+    if(traincv_perc ~= -1)
+        [X y] = shuffledata(X, y);
+        %Else No need to shuffle for league vs final, as ntest=4 (just finals)
+    end
     [Xtraincv ytraincv Xtest ytest] = splitdata(X, y, traincv_perc);
     
     S = featureselection(feat_selector, F, X, y, logs);
