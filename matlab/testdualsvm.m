@@ -1,4 +1,4 @@
-function [ypred, y, yconf] = testdualsvm(Xtraincv, ytraincv, X, y, C, K_gamma, logs)
+function [ypred, y, yconf, alpha] = testdualsvm(Xtraincv, ytraincv, X, y, C, K_gamma, logs)
     [alpha status] = kerdualsvm(Xtraincv,ytraincv, C, K_gamma);  
     accuracy = 0;
     [total ~] = size(X);

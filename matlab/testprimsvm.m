@@ -1,4 +1,4 @@
-function [ypred, y, yconf] = testprimsvm(Xtraincv, ytraincv, X, y, logs)
+function [ypred, y, yconf, theta] = testprimsvm(Xtraincv, ytraincv, X, y, logs)
     [theta status] = linprimalsvm(Xtraincv,ytraincv);
     if status == -2
         if logs == true

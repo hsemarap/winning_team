@@ -12,7 +12,7 @@ function accuracy = sampledata(traincv_perc, k, F, n, d)
     %comment this to try out previous sample data
     %[X y] = createsepdata(n, d);
     [X y]
-    [Xtrain, Xtest, ytrain, ytest, prim_ypred, prim_yconf, dual_ypred, dual_yconf, feat_subset] = runSVM(X, y, traincv_perc, k, F, logs);
+    [Xtrain, Xtest, ytrain, ytest, prim_ypred, prim_yconf, dual_ypred, dual_yconf, feat_subset, ~] = runSVM(X, y, traincv_perc, k, F, logs);
     prim_acc = getaccuracy(prim_ypred, ytest);
     dual_acc = getaccuracy(dual_ypred, ytest);
     prim_acc_str = num2str(prim_acc);
