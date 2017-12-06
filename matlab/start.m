@@ -1,5 +1,5 @@
 % Test Script for running with custom options and data
-function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, accuracy, feat_subset, theta_alpha] = start(traincv_perc, classifier, feat_selector, k, F, logs, season_start, season_end, cumulative, per_season, features)       
+function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, accuracy, feat_subset, theta_alpha] = start(league, traincv_perc, classifier, feat_selector, k, F, logs, season_start, season_end, cumulative, per_season, features)       
     if (~exist('features','var'))
         logs = true;
         season_start = 3;
@@ -26,7 +26,7 @@ function [Xtrain, Xtest, ytrain, ytest, ypred, yconf, accuracy, feat_subset, the
         Xcur = [];
 
         for feature_type=features
-            load(strcat("../extracted-stats/season", num2str(i), feature_type));
+            load(strcat("../extracted-stats/", league, "/season", num2str(i), feature_type));
             Xcur = [Xcur X];
         end
 
