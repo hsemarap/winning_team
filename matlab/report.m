@@ -43,6 +43,10 @@ function report()
         %%Reports bowling combo features all config
         %{["-alone-bowling-average-plus-strike-rate-plus-economy.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [20, 10, 6], "bowling_combo"}
         
+        %%All seasons all features        
+        %{all_features,2, 10, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46, 24], "all_features"},
+        %{all_features,2, 10, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46], "all_features"},
+        
         %%Per season all features        
         %{all_features, 2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [90, 68, 46, 24, 12], "all_features"},
         %{all_features, 3, 3, true, false, [.7], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [90, 68, 46, 24, 12], "all_features"},
@@ -98,11 +102,11 @@ function report()
         %{all_features, 10, 10, true, false, [.7], ["ensemble"], ["greedy", "forwardfitting"], [90, 68, 46, 24, 12], "all_features"},
 
         %%Per feature stats
-        {["-alone-rolling-stats.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "batting_strike_rate"},
-        {["-alone-average.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "batting_avg"},
-        {["-alone-bowling-economy.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "bowling_econ"},
-        {["-alone-bowling-strike-rate.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "bowling_strike_rate"},
-        {["-alone-team-win-rate.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [2], "team_win"},
+        %{["-alone-rolling-stats.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "batting_strike_rate"},
+        %{["-alone-average.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "batting_avg"},
+        %{["-alone-bowling-economy.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "bowling_econ"},
+        %{["-alone-bowling-strike-rate.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [22, 14, 6], "bowling_strike_rate"},
+        %{["-alone-team-win-rate.mat"], 2, 10, true, false, [.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [2], "team_win"},
         %{all_features, 2, 2, true, false, [.9,.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [20, 10, 6], "all_features"},
         %{all_features, 3, 3, true, false, [.9,.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [20, 10, 6], "all_features"},
         %{all_features, 4, 4, true, false, [.9,.8,.75,.7,.6], ["ensemble"], ["greedy", "forwardfitting"], [20, 10, 6], "all_features"},
