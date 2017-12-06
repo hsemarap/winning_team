@@ -100,4 +100,28 @@ other leagues: league = _; feature type = all features; all seasons; 0.7; classi
 
 ## Plots
 
-TODO
+precision vs recall:
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_forwardfitting_24_s3_3_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_forwardfitting_24_s8_8_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_greedy_12_s3_3_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_greedy_12_s4_4_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_greedy_12_s9_9_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_greedy_12_s10_10_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_logistic_forwardfitting_12_s4_4_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_logistic_forwardfitting_12_s5_5_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_logistic_forwardfitting_24_s5_5_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_logistic_forwardfitting_46_s5_5_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_logistic_forwardfitting_90_s4_4_prec_rec.jpg
+
+/home/pradeep/Projects-Programming/Fall-2017-Purdue/SML-CS578/Winning-Team/plots/all_features_0.70_dualsvm_greedy_12_s3_3_prec_rec.jpg
