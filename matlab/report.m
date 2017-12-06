@@ -36,9 +36,9 @@ function report()
                         "L1_norm"
                      ];
     configurations = [
-        {"ipl", all_features, 2, 10, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy", "forwardfitting"], [90, 68, 46, 24], "all_features"},
+        %{"ipl", all_features, 2, 10, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy", "forwardfitting"], [90, 68, 46, 24], "all_features"},
         %%Reports batting features all config
-        %{"ipl", ["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [44, 30, 20, 10, 6], "batting_avg_strike"},
+        {"ipl", ["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [44, 30, 20, 10, 6], "batting_avg_strike"},
         %%Reports batting combo features all config
         %{"ipl", ["-alone-batting-average-plus-strike-rate.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [20, 10, 6], "batting_combo"},
         %%Reports bowling combo features all config

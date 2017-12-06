@@ -4,7 +4,7 @@ function plot_and_save(visible, X, y, Xname, yname, title_str, filename)
     else
         figure1 = figure('Visible','off');
     end
-    plot(X, y);    
+    plot(X, y, '-*');    
     title(title_str); %'Precision vs Recall');
     xlabel(Xname); %('Recall');
     ylabel(yname); %('Precision');
