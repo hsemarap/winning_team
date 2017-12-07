@@ -35,19 +35,30 @@ function report()
                         "forward_fitting",
                         "L1_norm"
                      ];
-    configurations = [
-        %{"ipl", all_features, 2, 10, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy", "forwardfitting"], [90, 68, 46, 24], "all_features"},
+    configurations = [         
+        %%All seasons all features for IPL and T20     
+        {"ipl", all_features,2, 10, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46, 24], "all_features"},
+        {"t20s", all_features,2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46], "all_features"},
+
+        %all seasons, league vs Final
+        %{"ipl", all_features, 2, 2, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 3, 3, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 4, 4, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 5, 5, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 6, 6, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 7, 7, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 8, 8, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 9, 9, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+        %{"ipl", all_features, 10, 10, true, false, [-1], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68], "all_features"},
+
+        %{"ipl", all_features, 2, 10, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 60, 40, 20], "all_features"},           
         %%Reports batting features all config
-        {"ipl", ["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [44, 30, 20, 10, 6], "batting_avg_strike"},
+        %{"ipl", ["-alone-average.mat", "-alone-rolling-stats.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [44, 30, 20, 10, 6], "batting_avg_strike"},
         %%Reports batting combo features all config
         %{"ipl", ["-alone-batting-average-plus-strike-rate.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [20, 10, 6], "batting_combo"},
         %%Reports bowling combo features all config
         %{"ipl", ["-alone-bowling-average-plus-strike-rate-plus-economy.mat"], 2, 10, true, false, [.9,.8,.75,.7,.6], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [20, 10, 6], "bowling_combo"}
-        
-        %%All seasons all features        
-        %{"ipl", all_features,2, 10, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46, 24], "all_features"},
-        %{"t20s", all_features,2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic", "ensemble"], ["greedy"], [90, 68, 46], "all_features"},
-        
+               
         %%Per season all features        
         %{"ipl", all_features, 2, 2, true, false, [.7], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [90, 68, 46, 24, 12], "all_features"},
         %{"ipl", all_features, 3, 3, true, false, [.7], ["primalsvm", "dualsvm", "logistic"], ["greedy", "forwardfitting"], [90, 68, 46, 24, 12], "all_features"},
@@ -144,7 +155,7 @@ function report()
                     for subset_size=subset_sizes
                         combination_idx = combination_idx + 1;
                         if train_percent ~= -1
-                            percent_data = sprintf("%.2f_\%_data", train_percent);
+                            percent_data = sprintf("%.2f_%%_data", train_percent);
                         else
                             percent_data = "LeagueVsFinal";
                         end
@@ -161,7 +172,7 @@ function report()
                         feat_subset_str = feat_subset_str(1:end-1);
                         fprintf(fileID,'%f\t%s\t%s\t%s\t%d\tfeat-{%s}\n', accuracy, train_percent, classifier, feat_selector, subset_size, feat_subset_str);
                         fclose(fileID);                        
-                        start_r = 0; end_r = 1; count = 4;                            
+                        start_r = 0; end_r = 1; count = 20;                            
                         plotprecisionrecall(yconf, ytest, start_r, end_r, count, inst_prec_rec_file);                        
                     end
                 end
