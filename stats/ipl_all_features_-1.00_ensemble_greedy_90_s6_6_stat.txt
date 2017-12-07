@@ -1,1 +1,1 @@
-0.750000	-1.000000e+00	ensemble	greedy	90	feat-{89}
+0.750000	-1.000000e+00	ensemble	greedy	90	feat-{89}	s6_6	ipl_all_features
