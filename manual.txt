@@ -1,6 +1,7 @@
 Execution Instructions:
 
 # Extract Features
+We have already extracted the features into extracted-stats/, so it is not necessary to run the Python code.
 
 Requirements: python-numpy, python-scipy, python-yaml
 
@@ -17,3 +18,25 @@ cd into the matlab folder.
 Run `report`.
 
 The stats will be generated in stats/ and corresponding plots in plots/.
+
+Currently `report` is set to run with data from IPL (All seasons) and T20 International matches, 
+for all classifiers (Primal, Dual SVM, Logistic Regression, Ensemble)
+using greedy feature subset selection for different sizes.
+
+To generate different combinations of data, add custom configurations in the `configurations`
+vector in the following format
+{"<dataset>", [<list of features>], <season_start>, <season_end>, <need_cumulative_stats>, <need_per_season_stats>, [<training_percents>], [<classfiers>], [<feature selectors>], [<subset sizes>], "<filename_prefix>"}
+where
+<dataset> = ipl or bbl or t20
+[<list of features>] = vector of features for input, ex) ["-alone-rolling-stats.mat", "-alone-bowling-strike-rate.mat"], or use all_features to include all features
+<season_start>	= Integer, first season from which you need to collect data for input, e.g. 2
+<season_end>	= Integer, last season till which you need to collect data for input, e.g, 10
+<need_cumulative_stats> = Boolean, if the stats need to be cumlative till current season or consider that season
+<need_per_season_stats> = Boolean, need stats for each season
+[<training_percents>] = Vector, Different percent of data to be used for Training/CV e.g. [.8, .7, .6]
+[<classfiers>] = Vector, List of classifiers to use e.g. ["primalsvm", "dualsvm", "logistic", "ensemble"]
+[<feature selectors>] = Vector, List of feature selection algorithms to use e.g. ["greedy", "forwardfitting", "myopic"]
+[<subset sizes>] = Vector, List of subset size for feature selection e.g. [22, 10, 4]
+"<filename_prefix>" = string, prefix of the stat and plot files generated
+
+
