@@ -39,4 +39,8 @@ where
 [<subset sizes>] = Vector, List of subset size for feature selection e.g. [22, 10, 4]
 "<filename_prefix>" = string, prefix of the stat and plot files generated
 
+Note on running time
+It takes about 2 minutes on an average to run a single combination (per classifier per feature selection etc),
+so comment and change the configuration accordingly.
+If run on all classifiers and train percentages, it might take upto 10-20 minutes depending on the combination
 
