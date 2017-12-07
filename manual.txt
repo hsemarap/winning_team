@@ -1,0 +1,19 @@
+Execution Instructions:
+
+# Extract Features
+
+Requirements: python-numpy, python-scipy, python-yaml
+
+Feature aggregation (Python): To extract features from the raw dataset, run:
+
+./features/extract_features.py
+
+The extracted dataset will be in extracted-stats/.
+
+# Classification (Matlab)
+
+cd into the matlab folder.
+
+Run `report`.
+
+The stats will be generated in stats/ and corresponding plots in plots/.
